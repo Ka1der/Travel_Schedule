@@ -29,20 +29,42 @@
 		C9BA242E2D5533AF00C9EA8F /* Travel_ScheduleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Travel_ScheduleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C9BA24452D55346500C9EA8F /* Exceptions for "Travel_Schedule" folder in "Travel_Schedule" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/Travel_ScheduleTests/Travel_ScheduleTests.swift,
+				Tests/Travel_ScheduleUITests/Travel_ScheduleUITests.swift,
+				Tests/Travel_ScheduleUITests/Travel_ScheduleUITestsLaunchTests.swift,
+			);
+			target = C9BA24132D5533AD00C9EA8F /* Travel_Schedule */;
+		};
+		C9BA24462D55346500C9EA8F /* Exceptions for "Travel_Schedule" folder in "Travel_ScheduleTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/Travel_ScheduleTests/Travel_ScheduleTests.swift,
+			);
+			target = C9BA24232D5533AF00C9EA8F /* Travel_ScheduleTests */;
+		};
+		C9BA244C2D55346900C9EA8F /* Exceptions for "Travel_Schedule" folder in "Travel_ScheduleUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/Travel_ScheduleUITests/Travel_ScheduleUITests.swift,
+				Tests/Travel_ScheduleUITests/Travel_ScheduleUITestsLaunchTests.swift,
+			);
+			target = C9BA242D2D5533AF00C9EA8F /* Travel_ScheduleUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C9BA24162D5533AD00C9EA8F /* Travel_Schedule */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C9BA24452D55346500C9EA8F /* Exceptions for "Travel_Schedule" folder in "Travel_Schedule" target */,
+				C9BA24462D55346500C9EA8F /* Exceptions for "Travel_Schedule" folder in "Travel_ScheduleTests" target */,
+				C9BA244C2D55346900C9EA8F /* Exceptions for "Travel_Schedule" folder in "Travel_ScheduleUITests" target */,
+			);
 			path = Travel_Schedule;
-			sourceTree = "<group>";
-		};
-		C9BA24272D5533AF00C9EA8F /* Travel_ScheduleTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Travel_ScheduleTests;
-			sourceTree = "<group>";
-		};
-		C9BA24312D5533AF00C9EA8F /* Travel_ScheduleUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Travel_ScheduleUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -76,8 +98,6 @@
 			isa = PBXGroup;
 			children = (
 				C9BA24162D5533AD00C9EA8F /* Travel_Schedule */,
-				C9BA24272D5533AF00C9EA8F /* Travel_ScheduleTests */,
-				C9BA24312D5533AF00C9EA8F /* Travel_ScheduleUITests */,
 				C9BA24152D5533AD00C9EA8F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,9 +150,6 @@
 			dependencies = (
 				C9BA24262D5533AF00C9EA8F /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				C9BA24272D5533AF00C9EA8F /* Travel_ScheduleTests */,
-			);
 			name = Travel_ScheduleTests;
 			packageProductDependencies = (
 			);
@@ -152,9 +169,6 @@
 			);
 			dependencies = (
 				C9BA24302D5533AF00C9EA8F /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				C9BA24312D5533AF00C9EA8F /* Travel_ScheduleUITests */,
 			);
 			name = Travel_ScheduleUITests;
 			packageProductDependencies = (
@@ -395,7 +409,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Travel_Schedule/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 2F3554K48N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -404,6 +418,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -424,7 +439,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Travel_Schedule/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 2F3554K48N;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -433,6 +448,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
