@@ -45,7 +45,7 @@ struct MainView: View {
         Task {
             await runTest(test: apiService.testNearestStations, result: $nearestStations, successText: "Nearest test started. See console")
             await runTest(test: apiService.testThread, result: $thread, successText: "Thread test started. See console")
-            await runTest(test: apiService.testStationList, result: $stationList, successText: "Station List test started. See console")
+            await runTest(test: apiService.testStationsList, result: $stationList, successText: "Station List test started. See console")
             await runTest(test: apiService.testSearch, result: $search, successText: "Search test started. See console")
             await runTest(test: apiService.testShedule, result: $schedule, successText: "Schedule test started. See console")
             await runTest(test: apiService.testNearestSettlement, result: $nearestSettlement, successText: "Nearest Settlement Ttest started. See console")

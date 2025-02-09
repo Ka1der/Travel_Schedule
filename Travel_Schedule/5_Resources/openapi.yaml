@@ -63,7 +63,7 @@ paths:
       tags:
         - stationList
       summary: Получить список всех станций
-      operationId: getStationList
+      operationId: getStationsList
       parameters:
         - name: apikey
           in: query
