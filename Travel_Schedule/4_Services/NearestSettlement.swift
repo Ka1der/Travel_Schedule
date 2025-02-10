@@ -15,8 +15,8 @@ protocol NearestSettlementServiceProtocol {
     func getNearestSettlement(
         lat: Double,
         lng: Double,
-        distance: Int)
-    async throws -> NearestSettlement
+        distance: Int
+    ) async throws -> NearestSettlement
 }
 
 final class NearestSettlementService: NearestSettlementServiceProtocol {
@@ -26,10 +26,11 @@ final class NearestSettlementService: NearestSettlementServiceProtocol {
     
     init(
         client: Client,
-        apikey: String) {
-            self.client = client
-            self.apikey = apikey
-        }
+        apikey: String
+    ) {
+        self.client = client
+        self.apikey = apikey
+    }
     
     func getNearestSettlement(
         lat: Double,

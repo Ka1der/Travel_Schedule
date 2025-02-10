@@ -17,17 +17,24 @@ protocol SearchServiceProtocol {
         from: String,
         to: String,
         transportTypes: String,
-        date: Date)
-    async throws -> Search
+        date: Date
+    ) async throws -> Search
 }
 
 final class SearchListService: SearchServiceProtocol {
     private let client: Client
     private let apikey: String
     
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
     init(
         client: Client,
-        apikey: String) {
+        apikey: String
+    ) {
             self.client = client
             self.apikey = apikey
         }
@@ -40,10 +47,7 @@ final class SearchListService: SearchServiceProtocol {
         date: Date
     ) async throws -> Search {
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: date)
-        
         let response = try await client.getScheduleBetweenStations(query: .init(
             apikey: apikey,
             from: from,

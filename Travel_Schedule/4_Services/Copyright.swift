@@ -14,8 +14,7 @@ import OpenAPIURLSession
 typealias Copyright = Components.Schemas.Copyright
 
 protocol CopyrightServiceProtocol {
-    func getCopyright(apikey: String)
-    async throws -> Copyright
+    func getCopyright(apikey: String) async throws -> Copyright
 }
 
 final class CopyrightService: CopyrightServiceProtocol {
@@ -25,10 +24,11 @@ final class CopyrightService: CopyrightServiceProtocol {
     
     init(
         client: Client,
-        apikey: String) {
-            self.client = client
-            self.apikey = apikey
-        }
+        apikey: String
+    ) {
+        self.client = client
+        self.apikey = apikey
+    }
     
     func getCopyright(apikey: String) async throws -> Copyright {
         let response = try await client.getCopyright(query: .init(

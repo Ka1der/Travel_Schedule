@@ -12,8 +12,7 @@ import OpenAPIURLSession
 typealias Carrier = Components.Schemas.Carrier
 
 protocol CarrierServiceProtocol {
-    func getCarrier(apikey: String, code: String)
-    async throws -> Carrier
+    func getCarrier(apikey: String, code: String) async throws -> Carrier
 }
 
 final class CarrierService: CarrierServiceProtocol {
@@ -23,10 +22,11 @@ final class CarrierService: CarrierServiceProtocol {
     
     init(
         client: Client,
-        apikey: String) {
-            self.client = client
-            self.apikey = apikey
-        }
+        apikey: String
+    ) {
+        self.client = client
+        self.apikey = apikey
+    }
     
     func getCarrier(apikey: String, code: String) async throws -> Carrier {
         let response = try await client.getCarrier(query: .init(

@@ -15,8 +15,8 @@ protocol NearestStationsServiceProtocol {
     func getNearestStations(
         lat: Double,
         lng: Double,
-        distance: Int)
-    async throws -> NearestStations
+        distance: Int
+    ) async throws -> NearestStations
 }
 
 final class NearestStationsService: NearestStationsServiceProtocol {
@@ -25,10 +25,11 @@ final class NearestStationsService: NearestStationsServiceProtocol {
     
     init(
         client: Client,
-        apikey: String) {
-            self.client = client
-            self.apikey = apikey
-        }
+        apikey: String
+    ) {
+        self.client = client
+        self.apikey = apikey
+    }
     
     func getNearestStations(
         lat: Double,

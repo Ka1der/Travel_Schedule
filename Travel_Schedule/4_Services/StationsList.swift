@@ -13,8 +13,8 @@ typealias StationsList = Components.Schemas.StationsList
 
 protocol StationsListServiceProtocol {
     func getStationsList(
-        apikey: String)
-    async throws -> StationsList
+        apikey: String
+    ) async throws -> StationsList
 }
 
 final class StationsListService: StationsListServiceProtocol {
@@ -23,10 +23,11 @@ final class StationsListService: StationsListServiceProtocol {
     
     init(
         client: Client,
-        apikey: String) {
-            self.client = client
-            self.apikey = apikey
-        }
+        apikey: String
+    ) {
+        self.client = client
+        self.apikey = apikey
+    }
     
     func getStationsList(apikey: String) async throws -> StationsList {
         let urlString = "https://api.rasp.yandex.net/v3.0/stations_list/?apikey=\(apikey)"

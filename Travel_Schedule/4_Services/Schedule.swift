@@ -16,15 +16,24 @@ protocol ScheduleServiceProtocol {
         apikey: String,
         station: String,
         transportTypes: String,
-        date: Date)
-    async throws -> ScheduleList
+        date: Date
+    ) async throws -> ScheduleList
 }
 
 final class ScheduleService: ScheduleServiceProtocol {
     private let client: Client
     private let apikey: String
     
-    init(client: Client, apikey: String) {
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    init(
+        client: Client,
+        apikey: String
+    ) {
         self.client = client
         self.apikey = apikey
     }
@@ -36,10 +45,7 @@ final class ScheduleService: ScheduleServiceProtocol {
         String, date: Date
     ) async throws -> ScheduleList {
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
         let dateString = dateFormatter.string(from: date)
-        
         let response = try await client.getScheduleOnStation(query: .init(
             apikey: apikey,
             station: station,
