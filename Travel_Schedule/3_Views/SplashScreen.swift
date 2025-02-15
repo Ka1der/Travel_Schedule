@@ -8,10 +8,34 @@
 import SwiftUI
 
 struct SplashScreen: View {
+    @State private var isActive = false
+    
     var body: some View {
-        Image("SplashScreen")
-            .resizable()
-            .ignoresSafeArea()
+        NavigationView {
+            ZStack {
+                if isActive {
+                    MainView()
+                } else {
+                    Image("SplashScreen")
+                        .resizable()
+                        .ignoresSafeArea()
+                }
+            }
+            .navigationBarHidden(true)
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                withAnimation {
+                    self.isActive = true
+                }
+            }
+        }
+    }
+}
+
+struct MainScreen: View {
+    var body: some View {
+        Text("Главный экран")
     }
 }
 

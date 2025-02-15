@@ -1,0 +1,10 @@
+#
+#  openapi-generator-config.yaml
+#  Travel_Schedule
+#
+#  Created by Kaider on 08.02.2025.
+#
+
+generate:
+ - types
+ - client
