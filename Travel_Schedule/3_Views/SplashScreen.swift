@@ -14,7 +14,7 @@ struct SplashScreen: View {
         NavigationView {
             ZStack {
                 if isActive {
-                    MainView()
+                    TestView()
                 } else {
                     Image("SplashScreen")
                         .resizable()

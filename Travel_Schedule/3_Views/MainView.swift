@@ -2,63 +2,42 @@
 //  MainView.swift
 //  Travel_Schedule
 //
-//  Created by Kaider on 06.02.2025.
+//  Created by Kaider on 23.02.2025.
 //
 
 import SwiftUI
 
 struct MainView: View {
-    @State private var carrier = "Carrier wait test"
-    @State private var copyright = "Copyright wait test"
-    @State private var nearestSettlement = "Nearest Settlement wait test"
-    @State private var nearestStations = "Neared Stations wait test"
-    @State private var schedule = "Schedule wait test"
-    @State private var search = "Search wait test"
-    @State private var stationList = "Station List wait test"
-    @State private var thread = "Thread wait test"
-    
-    private let apiService = TestAPIService()
-    
     var body: some View {
-        VStack {
-            Button("Run API test") {
-                runTests()
-                
+        TabView {
+            VStack{
+                GeometryReader { geometry in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(0..<5){_ in
+                                StoriesViewModel()
+                                    .padding(.horizontal, 6)
+                            }
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.leading, 16)
+                    }
+                    RouteSearchFieldView()
+                        .position(x: geometry.size.width / 2, y: geometry.size.height - 413)
+                }
             }
-            .padding()
-            .background(Color.blue)
-            .foregroundColor(.white)
-            .cornerRadius(16)
-            .padding()
-            
-            Divider()
-            Spacer()
-            
-            Text("\(carrier)\n\(copyright)\n\(nearestSettlement)\n\(nearestStations)\n\(schedule)\n\(search)\n\(stationList)\n\(thread)")
-                .frame(maxHeight: .infinity, alignment: .center)
-                .multilineTextAlignment(.center)
+            .tabItem {
+                Label("", systemImage: "arrow.up.message.fill")
+            }
+            Text("Настройки")
+                .tabItem {
+                    Label("", systemImage: "gearshape.fill")
+                }
         }
-        .padding()
+        .tint(.black)
     }
-    
-    func runTests() {
-        Task {
-            await runTest(test: apiService.testNearestStations, result: $nearestStations, successText: "Nearest test started. See console")
-            await runTest(test: apiService.testThread, result: $thread, successText: "Thread test started. See console")
-            await runTest(test: apiService.testStationsList, result: $stationList, successText: "Station List test started. See console")
-            await runTest(test: apiService.testSearch, result: $search, successText: "Search test started. See console")
-            await runTest(test: apiService.testShedule, result: $schedule, successText: "Schedule test started. See console")
-            await runTest(test: apiService.testNearestSettlement, result: $nearestSettlement, successText: "Nearest Settlement Ttest started. See console")
-            await runTest(test: apiService.testCarrier, result: $carrier, successText: "Carrier test started. See console")
-            await runTest(test: apiService.testCopyright, result: $copyright, successText: "Copyright test started. See console")
-        }
-    }
-    
-    func runTest(test: @escaping () async -> Void, result: Binding<String>, successText: String) async {
-        await test()
-        result.wrappedValue = successText
-    }
-  }
+}
+
 
 #Preview {
     MainView()
