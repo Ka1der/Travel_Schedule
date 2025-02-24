@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RouteSearchFieldView: View {
     
+    @EnvironmentObject private var router: Router
     @State private var fromText: String = ""
     @State private var toText: String = ""
     
@@ -27,19 +28,29 @@ struct RouteSearchFieldView: View {
                 
                 HStack {
                     VStack(spacing: 0) {
-                        TextField("Откуда", text: $fromText)
-                            .textFieldStyle(.plain)
-                            .padding(.leading, 16)
-                            .frame(width: 259, height: 48)
-                            .font(.system(size: 17))
-                            .padding(.top, 14)
+                        Text(fromText.isEmpty ? "Откуда" : fromText)
+                            .foregroundColor(fromText.isEmpty ? .gray : .black)
+                                  .frame(width: 227, alignment: .leading)
+                                  .frame(height: 48)
+                                  .font(.system(size: 17))
+                                  .contentShape(Rectangle())
+                                  .onTapGesture {
+                                      router.navigate(to: .choosingCity)
+                                  }
+                                  .padding(.leading, 16)
+                                  .padding(.top, 14)
                         
-                        TextField("Куда", text: $toText)
-                            .textFieldStyle(.plain)
-                            .padding(.leading, 16)
-                            .frame(width: 259, height: 48)
-                            .font(.system(size: 17))
-                            .padding(.bottom, 14)
+                        Text(toText.isEmpty ? "Куда" : toText)
+                            .foregroundColor(toText.isEmpty ? .gray : .black)
+                                  .frame(width: 227, alignment: .leading)
+                                  .frame(height: 48)
+                                  .font(.system(size: 17))
+                                  .contentShape(Rectangle())
+                                  .onTapGesture {
+                                      router.navigate(to: .choosingCity)
+                                  }
+                                  .padding(.leading, 16)
+                                  .padding(.bottom, 14)
                     }
                     .frame(width: 259, height: 96)
                     .padding(.leading, 16)
@@ -57,6 +68,7 @@ struct RouteSearchFieldView: View {
     }
 }
 
-//#Preview {
-//    RouteSearchFieldView()
-//}
+#Preview {
+    RouteSearchFieldView()
+        .environmentObject(Router())
+}
