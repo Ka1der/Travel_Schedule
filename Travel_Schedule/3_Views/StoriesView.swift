@@ -33,6 +33,6 @@ struct StoriesViewModel: View {
     }
 }
 
-//#Preview {
-//    StoriesViewModel()
-//}
+#Preview {
+    StoriesViewModel()
+}

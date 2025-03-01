@@ -1,27 +1,27 @@
 //
-//  ChoosingCityView.swift
+//  ChoosingStationsView.swift
 //  Travel_Schedule
 //
-//  Created by Kaider on 23.02.2025.
+//  Created by Kaider on 26.02.2025.
 //
 
 import SwiftUI
 
-struct ChoosingCityView: View {
+struct ChoosingStationsView: View {
     
     @State private var searchText = ""
     @EnvironmentObject var router: Router
     @EnvironmentObject var routeModel: RouteModel
     
-    var filteredCities: [String] {
+    var filteredStation: [String] {
         if searchText.isEmpty {
-            return cities
+            return stations
         }
-        return cities.filter { $0.lowercased().contains(searchText.lowercased()) }
+        return stations.filter { $0.lowercased().contains(searchText.lowercased()) }
     }
     
     var body: some View {
-        VStack {
+        VStack{
             HStack {
                          Image(systemName: "magnifyingglass")
                              .foregroundColor(.gray)
@@ -42,15 +42,15 @@ struct ChoosingCityView: View {
                      .cornerRadius(10)
                      .padding()
             
-            if filteredCities.isEmpty {
-                Text("Город не найден")
+            if filteredStation.isEmpty {
+                Text("Станция не найдена")
                     .font(.system(size: 24))
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            List(filteredCities, id: \.self) { city in
+            List(filteredStation, id: \.self) { station in
                 HStack {
-                    Text(city)
+                    Text(station)
                         .font(.system(size: 17))
                     
                     Spacer()
@@ -62,23 +62,22 @@ struct ChoosingCityView: View {
                 .contentShape(Rectangle())
                 .onTapGesture {
                     if routeModel.isSelectingFromCity {
-                        routeModel.fromCity = city
-                    } else {
-                        routeModel.toCity = city
-                    }
-                    router.navigate(to: .choosingStation)
+                                  routeModel.fromStations = station
+                              } else {
+                                  routeModel.toStations = station
+                              }
+                    router.navigateToRoot()
                 }
                 .listRowSeparator(.hidden)
             }
             .listStyle(PlainListStyle())
-            
         }
-        .navigationTitle("Выбор города")
+        .navigationTitle("Выбор станции")
     }
 }
 
 #Preview {
-    ChoosingCityView()
+    ChoosingStationsView()
         .environmentObject(Router())
         .environmentObject(RouteModel())
 }

@@ -7,12 +7,27 @@
 
 import SwiftUI
 
+enum Screens: Hashable {
+    case mainScreen
+    case choosingCity
+    case choosingStation
+    
+    @ViewBuilder
+    var view: some View {
+        switch self {
+        case .mainScreen: MainView()
+        case .choosingCity:  ChoosingCityView()
+        case .choosingStation:  ChoosingStationsView()
+        }
+    }
+}
+
 @MainActor
 final class Router: ObservableObject {
     
     @Published var path = NavigationPath()
     
-    func navigate(to destination: Route) {
+    func navigate(to destination: Screens) {
         path.append(destination)
     }
     
@@ -23,24 +38,7 @@ final class Router: ObservableObject {
     func navigateToRoot() {
         path.removeLast(path.count)
     }
-    
-    @ViewBuilder
-    func view(for route: Route) -> some View {
-        switch route {
-        case .mainScreen: MainView()
-        case .choosingCity:  ChoosingCityView()
-//        case .choosingStation:
-//            <#code#>
-//        case .carrierList:
-//            <#code#>
-//        case .carrierCard:
-//            <#code#>
-//        case .stories:
-//            <#code#>
-//        case .settings:
-//            <#code#>
-//        case .userAgreement:
-//            <#code#>
-        }
-    }
 }
+
+
+

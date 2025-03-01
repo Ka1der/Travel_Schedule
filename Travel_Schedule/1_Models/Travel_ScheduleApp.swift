@@ -9,9 +9,15 @@ import SwiftUI
 
 @main
 struct Travel_ScheduleApp: App {
+    
+    @StateObject private var router = Router()
+    @StateObject private var routeModel = RouteModel()
+    
     var body: some Scene {
         WindowGroup {
             SplashScreen()
+                .environmentObject(router)
+                .environmentObject(routeModel)
         }
     }
 }

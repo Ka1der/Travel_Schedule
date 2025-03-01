@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct SplashScreen: View {
-    @StateObject private var router = Router()
+    
+    @EnvironmentObject var router: Router
+    @EnvironmentObject var routeModel: RouteModel
     @State private var isActive = false
     
     var body: some View {
         NavigationView {
             ZStack {
                 if isActive {
-                    MainView()
+                    ContentView()
                         .environmentObject(router)
+                        .environmentObject(routeModel)
                 } else {
                     Image("SplashScreen")
                         .resizable()
