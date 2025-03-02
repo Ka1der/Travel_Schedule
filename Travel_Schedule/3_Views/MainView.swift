@@ -33,7 +33,7 @@ struct MainView: View {
                       VStack{
                           if !routeViewModel.fromCity.isEmpty && !routeViewModel.toCity.isEmpty {
                               Button(action: {
-                                  routeViewModel.searchRoutes()
+                                  navigationManager.path.append(AppScreen.carrierList)
                               }) {
                                   Text("Найти")
                                       .frame(width: 150, height: 60)
