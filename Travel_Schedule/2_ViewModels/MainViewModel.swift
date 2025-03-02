@@ -14,6 +14,8 @@ class MainViewModel: ObservableObject {
     @Published var showNearestSettlementAlert: Bool = false
     @Published var nearestSettlementMessage: String = ""
     
+    
+    
     private let settlementService: NearestSettlementServiceProtocol
     
     init(settlementService: NearestSettlementServiceProtocol = ServiceManager.shared.createNearestSettlementService()) {
