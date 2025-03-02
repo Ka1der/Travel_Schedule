@@ -6,49 +6,50 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct ChoosingStationsView: View {
+    @ObservedObject var viewModel: StationSelectionViewModel
+    @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var routeViewModel: RouteViewModel
     
-    @State private var searchText = ""
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var routeModel: RouteModel
+    var isSelectingFromCity: Bool
     
-    var filteredStation: [String] {
-        if searchText.isEmpty {
-            return stations
-        }
-        return stations.filter { $0.lowercased().contains(searchText.lowercased()) }
+    init(viewModel: StationSelectionViewModel, isSelectingFromCity: Bool) {
+        self.viewModel = viewModel
+        self.isSelectingFromCity = isSelectingFromCity
     }
     
     var body: some View {
         VStack{
             HStack {
-                         Image(systemName: "magnifyingglass")
-                             .foregroundColor(.gray)
-                         TextField("Введите запрос", text: $searchText)
-                           
-                         if !searchText.isEmpty {
-                             Button(action: {
-                                 searchText = ""
-                             }) {
-                                 Image(systemName: "xmark.circle.fill")
-                                     .foregroundColor(.gray)
-                             }
-                         }
-                     }
-                     .padding(.horizontal)
-                     .padding(.vertical, 10)
-                     .background(Color(.systemGray6))
-                     .cornerRadius(10)
-                     .padding()
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
+                TextField("Введите запрос", text: $viewModel.searchText)
+                
+                if !viewModel.searchText.isEmpty {
+                    Button(action: {
+                        viewModel.searchText = ""
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 10)
+            .background(Color(.systemGray6))
+            .cornerRadius(10)
+            .padding()
             
-            if filteredStation.isEmpty {
+            if viewModel.filteredStations.isEmpty {
                 Text("Станция не найдена")
                     .font(.system(size: 24))
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            List(filteredStation, id: \.self) { station in
+            
+            List(viewModel.filteredStations, id: \.self) { station in
                 HStack {
                     Text(station)
                         .font(.system(size: 17))
@@ -61,23 +62,31 @@ struct ChoosingStationsView: View {
                 .padding(.vertical, 8)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    if routeModel.isSelectingFromCity {
-                                  routeModel.fromStations = station
-                              } else {
-                                  routeModel.toStations = station
-                              }
-                    router.navigateToRoot()
+                    // Используем RouteViewModel вместо RouteModel
+                    routeViewModel.selectStation(station: station, isFromCity: isSelectingFromCity)
+                    navigationManager.path.removeLast(navigationManager.path.count)
                 }
                 .listRowSeparator(.hidden)
             }
             .listStyle(PlainListStyle())
         }
         .navigationTitle("Выбор станции")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    navigationManager.path.removeLast()
+                }) {
+                    HStack(spacing: 2) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.black)
+                    }
+                }
+            }
+        }
+        .task {
+            // Загружаем станции при появлении экрана
+            await viewModel.loadStationsForCity()
+        }
     }
-}
-
-#Preview {
-    ChoosingStationsView()
-        .environmentObject(Router())
-        .environmentObject(RouteModel())
 }

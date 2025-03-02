@@ -7,7 +7,7 @@
 
 import Foundation
 
-let stations = [
+let defaultStations = [
     "Киевский вокзал",
     "Курский вокзал",
     "Ленинградский вокзал"

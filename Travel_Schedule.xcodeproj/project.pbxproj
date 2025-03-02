@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C9D77EB62D73E210006A52AB /* NavigationKit in Frameworks */ = {isa = PBXBuildFile; productRef = C9D77EB52D73E210006A52AB /* NavigationKit */; };
 		C9F6747B2D578023009D0227 /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = C9F6747A2D578023009D0227 /* OpenAPIRuntime */; };
 		C9F6747D2D578029009D0227 /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = C9F6747C2D578029009D0227 /* OpenAPIURLSession */; };
 /* End PBXBuildFile section */
@@ -81,6 +82,7 @@
 			files = (
 				C9F6747D2D578029009D0227 /* OpenAPIURLSession in Frameworks */,
 				C9F6747B2D578023009D0227 /* OpenAPIRuntime in Frameworks */,
+				C9D77EB62D73E210006A52AB /* NavigationKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +152,7 @@
 			packageProductDependencies = (
 				C9F6747A2D578023009D0227 /* OpenAPIRuntime */,
 				C9F6747C2D578029009D0227 /* OpenAPIURLSession */,
+				C9D77EB52D73E210006A52AB /* NavigationKit */,
 			);
 			productName = Travel_Schedule;
 			productReference = C9BA24142D5533AD00C9EA8F /* Travel_Schedule.app */;
@@ -231,6 +234,7 @@
 				C9F674772D577FF2009D0227 /* XCRemoteSwiftPackageReference "swift-openapi-generator" */,
 				C9F674782D578002009D0227 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
 				C9F674792D57800B009D0227 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
+				C9D77EB42D73E210006A52AB /* XCRemoteSwiftPackageReference "NavigationKit-SPM" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C9BA24152D5533AD00C9EA8F /* Products */;
@@ -605,6 +609,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C9D77EB42D73E210006A52AB /* XCRemoteSwiftPackageReference "NavigationKit-SPM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Ka1der/NavigationKit-SPM";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		C9F674772D577FF2009D0227 /* XCRemoteSwiftPackageReference "swift-openapi-generator" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-openapi-generator";
@@ -632,6 +644,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C9D77EB52D73E210006A52AB /* NavigationKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9D77EB42D73E210006A52AB /* XCRemoteSwiftPackageReference "NavigationKit-SPM" */;
+			productName = NavigationKit;
+		};
 		C9F6747A2D578023009D0227 /* OpenAPIRuntime */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C9F674782D578002009D0227 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */;

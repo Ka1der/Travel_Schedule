@@ -1,5 +1,5 @@
 //
-//  StoriesViewModel.swift
+//  StoriesView.swift
 //  Travel_Schedule
 //
 //  Created by Kaider on 23.02.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StoriesViewModel: View {
+struct StoriesView: View {
     var body: some View {
         GeometryReader { geomery in
             ZStack{
@@ -34,5 +34,5 @@ struct StoriesViewModel: View {
 }
 
 #Preview {
-    StoriesViewModel()
+    StoriesView()
 }

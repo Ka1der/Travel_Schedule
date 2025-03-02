@@ -6,35 +6,17 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct RouteSearchFieldView: View {
     
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var routeModel: RouteModel
+    @EnvironmentObject var routeViewModel: RouteViewModel
+    @EnvironmentObject var navigationManager: NavigationManager
     
-    private func formattedFromText() -> String {
-           if routeModel.fromCity.isEmpty {
-               return "Откуда"
-           } else if routeModel.fromStations.isEmpty {
-               return routeModel.fromCity
-           } else {
-               return "\(routeModel.fromCity) (\(routeModel.fromStations))"
-           }
-       }
-       
-       private func formattedToText() -> String {
-           if routeModel.toCity.isEmpty {
-               return "Куда"
-           } else if routeModel.toStations.isEmpty {
-               return routeModel.toCity
-           } else {
-               return "\(routeModel.toCity) (\(routeModel.toStations))"
-           }
-       }
+    @State private var isReverseButtonAnimating = false
     
     var body: some View {
-        
-        HStack{
+        HStack {
             ZStack(alignment: .leading) {
                 
                 RoundedRectangle(cornerRadius: 20)
@@ -48,8 +30,8 @@ struct RouteSearchFieldView: View {
                 
                 HStack {
                     VStack(spacing: 0) {
-                        Text(formattedFromText())
-                            .foregroundColor(routeModel.fromCity.isEmpty ? .gray : .black)
+                        Text(routeViewModel.getFormattedFromText())
+                            .foregroundColor(routeViewModel.fromCity.isEmpty ? .gray : .black)
                             .frame(width: 227, alignment: .leading)
                             .frame(height: 48)
                             .font(.system(size: 17))
@@ -57,14 +39,14 @@ struct RouteSearchFieldView: View {
                             .truncationMode(.tail)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                routeModel.isSelectingFromCity = true
-                                router.navigate(to: .choosingCity)
+                                routeViewModel.isSelectingFromCity = true
+                                navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: true))
                             }
                             .padding(.leading, 16)
                             .padding(.top, 14)
                         
-                        Text(formattedToText())
-                            .foregroundColor(routeModel.toCity.isEmpty ? .gray : .black)
+                        Text(routeViewModel.getFormattedToText())
+                            .foregroundColor(routeViewModel.toCity.isEmpty ? .gray : .black)
                             .frame(width: 227, alignment: .leading)
                             .frame(height: 48)
                             .font(.system(size: 17))
@@ -72,8 +54,8 @@ struct RouteSearchFieldView: View {
                             .truncationMode(.tail)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                routeModel.isSelectingFromCity = false
-                                router.navigate(to: .choosingCity)
+                                routeViewModel.isSelectingFromCity = false
+                                navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: false))
                             }
                             .padding(.leading, 16)
                             .padding(.bottom, 14)
@@ -86,26 +68,26 @@ struct RouteSearchFieldView: View {
                     Circle()
                         .frame(width: 36, height: 36)
                         .foregroundStyle(Color.white)
+                    
                     Image(systemName: "arrow.2.squarepath")
                         .foregroundStyle(.blue)
+                        .rotationEffect(isReverseButtonAnimating ? .degrees(180) : .degrees(0))
                         .onTapGesture {
-                            let tempFromCity = routeModel.fromCity
-                            let tempFromStations = routeModel.fromStations
-                            routeModel.fromCity = routeModel.toCity
-                            routeModel.fromStations = routeModel.toStations
-                            routeModel.toCity = tempFromCity
-                            routeModel.toStations = tempFromStations
+                            withAnimation(.spring(duration: 0.3)) {
+                                isReverseButtonAnimating = true
+                            }
+                            
+                            routeViewModel.swapCities()
+                            
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                withAnimation(.spring(duration: 0.3)) {
+                                    isReverseButtonAnimating = false
+                                }
+                            }
                         }
                 }
                 .padding(.leading, 291)
             }
         }
     }
-}
-
-
-#Preview {
-    RouteSearchFieldView()
-        .environmentObject(Router())
-        .environmentObject(RouteModel())
 }
