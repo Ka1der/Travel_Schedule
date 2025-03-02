@@ -14,6 +14,7 @@ enum AppScreen: Screen, Hashable {
     case choosingStation(isSelectingFromCity: Bool)
     case userAgreementView
     case carrierList
+    case carrierInfo(carrier: CarrierModel)
     
     var body: some View {
         switch self {
@@ -34,7 +35,9 @@ enum AppScreen: Screen, Hashable {
         case .userAgreementView:
             UserAgreementView()
         case .carrierList:
-                CarrierListView()
+            CarrierListView()
+        case .carrierInfo(let carrier):
+            CarrierInfoView(carrier: carrier)
         }
     }
 }

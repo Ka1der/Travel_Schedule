@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct CarrierView: View {
     
     let carrier: CarrierModel
+    @EnvironmentObject var navigationManager: NavigationManager
     
     var body: some View {
         ZStack {
@@ -21,11 +23,15 @@ struct CarrierView: View {
                 Text(carrier.logo)
             }
         }
+        .onTapGesture {
+            navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
+        }
     }
 }
 
 struct CarrierView_Previews: PreviewProvider {
     static var previews: some View {
         CarrierView(carrier: CarrierModel(name: "Sample Carrier", logo: "sampleLogo"))
+            .environmentObject(NavigationKit.createNavigationManager())
     }
 }

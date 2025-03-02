@@ -37,6 +37,10 @@ struct CarrierListView: View {
                 List(viewModel.carriers) { carrier in
                     VStack {
                         CarrierView(carrier: carrier)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
+                            }
                         Spacer().frame(height: 8)
                     }
                     .frame(maxWidth: .infinity, alignment: .center)

@@ -7,8 +7,17 @@
 
 import Foundation
 
-struct CarrierModel: Identifiable {
+struct CarrierModel: Identifiable, Hashable {
     let id = UUID()
     let name: String
     let logo: String
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(name)
+    }
+    
+    static func == (lhs: CarrierModel, rhs: CarrierModel) -> Bool {
+        return lhs.id == rhs.id && lhs.name == rhs.name
+    }
 }

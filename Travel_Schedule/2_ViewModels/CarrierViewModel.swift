@@ -9,9 +9,9 @@ import Foundation
 
 class CarrierViewModel: ObservableObject {
     @Published var carriers: [CarrierModel] = [
-        CarrierModel(name: "Carrier 1", logo: "logo1"),
-        CarrierModel(name: "Carrier 2", logo: "logo2"),
-        CarrierModel(name: "Carrier 3", logo: "logo3"),
+        CarrierModel(name: "РЖД", logo: "rzdlogo"),
+        CarrierModel(name: "Аэрофлот", logo: "aeroflotlogo"),
+        CarrierModel(name: "S7 Airlines", logo: "s7logo"),
         CarrierModel(name: "Carrier 4", logo: "logo4"),
         CarrierModel(name: "Carrier 5", logo: "logo5")
     ]
