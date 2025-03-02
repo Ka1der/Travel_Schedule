@@ -1,6 +1,15 @@
 {
-  "originHash" : "84e6b351a277bf91ab6a4a07344af2e18b312828f04e8e7b71ec8b1793165a38",
+  "originHash" : "be1057196f1579801993706f4990a4d26662cd2806959c6f94e1df3b6f92762e",
   "pins" : [
+    {
+      "identity" : "navigationkit-spm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Ka1der/NavigationKit-SPM",
+      "state" : {
+        "branch" : "main",
+        "revision" : "97abd1099d310122c132d313cb9fba4a79dd8d72"
+      }
+    },
     {
       "identity" : "openapikit",
       "kind" : "remoteSourceControl",

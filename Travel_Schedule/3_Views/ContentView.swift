@@ -6,23 +6,13 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct ContentView: View {
-    
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var routeModel: RouteModel
+    @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var routeViewModel: RouteViewModel
     
     var body: some View {
-          NavigationStack(path: $router.path) {
-              MainView()
-                  .navigationDestination(for: Screens.self) { screen in
-                      screen.view
-                  }
-          }
-      }
-  }
-
-#Preview {
-    ContentView()
-        .environmentObject(Router())
+        MainView()
+    }
 }

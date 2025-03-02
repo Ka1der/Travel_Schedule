@@ -6,18 +6,20 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 @main
 struct Travel_ScheduleApp: App {
-    
-    @StateObject private var router = Router()
-    @StateObject private var routeModel = RouteModel()
+    @StateObject private var routeViewModel = RouteViewModel()
+    @StateObject private var mainViewModel = MainViewModel()
+    @StateObject private var navigationManager = NavigationKit.createNavigationManager()
     
     var body: some Scene {
         WindowGroup {
-            SplashScreen()
-                .environmentObject(router)
-                .environmentObject(routeModel)
+            ContentViewContainer()
+                .environmentObject(routeViewModel)
+                .environmentObject(mainViewModel)
+                .withNavigationManager(navigationManager)
         }
     }
 }
