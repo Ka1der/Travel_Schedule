@@ -12,6 +12,7 @@ enum AppScreen: Screen, Hashable {
     case main
     case choosingCity(isSelectingFromCity: Bool)
     case choosingStation(isSelectingFromCity: Bool)
+    case userAgreementView
     
     var body: some View {
         switch self {
@@ -29,6 +30,8 @@ enum AppScreen: Screen, Hashable {
                 ),
                 isSelectingFromCity: isSelectingFromCity
             )
+        case .userAgreementView:
+            UserAgreementView()
         }
     }
 }

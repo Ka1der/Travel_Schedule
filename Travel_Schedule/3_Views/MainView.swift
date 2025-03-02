@@ -28,30 +28,30 @@ struct MainView: View {
                         .padding(.leading, 16)
                     }
                     
-            
+                    
                     /*
-                    Button(action: {
-                        Task {
-                            await mainViewModel.findNearestSettlements(
-                                latitude: 59.864177,
-                                longitude: 30.319163,
-                                distance: 50
-                            )
-                        }
-                    }) {
-                        Label("Найти ближайшие города", systemImage: "location.circle.fill")
-                            .padding()
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(10)
-                    }
-                    .position(x: geometry.size.width / 2, y: geometry.size.height - 500)
-                    .alert("Результат поиска",
-                           isPresented: $mainViewModel.showNearestSettlementAlert) {
-                        Button("OK", role: .cancel) {}
-                    } message: {
-                        Text(mainViewModel.nearestSettlementMessage)
-                    }
-                    */
+                     Button(action: {
+                     Task {
+                     await mainViewModel.findNearestSettlements(
+                     latitude: 59.864177,
+                     longitude: 30.319163,
+                     distance: 50
+                     )
+                     }
+                     }) {
+                     Label("Найти ближайшие города", systemImage: "location.circle.fill")
+                     .padding()
+                     .background(Color.blue.opacity(0.1))
+                     .cornerRadius(10)
+                     }
+                     .position(x: geometry.size.width / 2, y: geometry.size.height - 500)
+                     .alert("Результат поиска",
+                     isPresented: $mainViewModel.showNearestSettlementAlert) {
+                     Button("OK", role: .cancel) {}
+                     } message: {
+                     Text(mainViewModel.nearestSettlementMessage)
+                     }
+                     */
                     
                     RouteSearchFieldView()
                         .position(x: geometry.size.width / 2, y: geometry.size.height - 413)
@@ -61,12 +61,10 @@ struct MainView: View {
                 Label("", systemImage: "arrow.up.message.fill")
             }
             
-            Button("Настройки") {
-                navigationManager.presentSheet(ModalScreen.settings)
-            }
-            .tabItem {
-                Label("", systemImage: "gearshape.fill")
-            }
+            SettingsView()
+                .tabItem {
+                    Label("", systemImage: "gearshape.fill")
+                }
         }
         .tint(.black)
     }
