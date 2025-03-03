@@ -62,7 +62,6 @@ struct ChoosingStationsView: View {
                 .padding(.vertical, 8)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    // Используем RouteViewModel вместо RouteModel
                     routeViewModel.selectStation(station: station, isFromCity: isSelectingFromCity)
                     navigationManager.path.removeLast(navigationManager.path.count)
                 }
@@ -83,10 +82,6 @@ struct ChoosingStationsView: View {
                     }
                 }
             }
-        }
-        .task {
-            // Загружаем станции при появлении экрана
-            await viewModel.loadStationsForCity()
         }
     }
 }

@@ -49,8 +49,7 @@ final class ScheduleService: ScheduleServiceProtocol {
         let response = try await client.getScheduleOnStation(query: .init(
             apikey: apikey,
             station: station,
-            transport_types: transportTypes,
-            date: dateString
+            date: dateString, transport_types: transportTypes
         ))
         return try response.ok.body.json
     }

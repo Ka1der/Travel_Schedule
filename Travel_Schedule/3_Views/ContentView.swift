@@ -17,9 +17,9 @@ struct ContentView: View {
     }
 }
 
-//#Preview {
-//    ContentView()
-//        .environmentObject(RouteViewModel())
-//        .environmentObject(MainViewModel())
-//        .environmentObject(NavigationKit.createNavigationManager())
-//}
+#Preview {
+    ContentView()
+        .environmentObject(RouteViewModel())
+        .environmentObject(MainViewModel())
+        .environmentObject(NavigationKit.createNavigationManager())
+}

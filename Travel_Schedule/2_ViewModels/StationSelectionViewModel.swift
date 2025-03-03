@@ -9,6 +9,14 @@ import Foundation
 import SwiftUI
 import Combine
 
+private var defaultStations = [
+    "Ленинградский вокзал",
+    "Казанский вокзал",
+    "Ярославский вокзал",
+    "Курский вокзал",
+    "Киевский вокзал"
+]
+
 class StationSelectionViewModel: ObservableObject {
     @Published var stations: [String] = []
     @Published var filteredStations: [String] = []
@@ -18,16 +26,13 @@ class StationSelectionViewModel: ObservableObject {
     @Published var selectedCity: String = ""
     @Published var selectedStation: String? = nil
     
-    private let stationsService: StationsListServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
     var onStationSelected: ((String) -> Void)?
     
-    init(city: String,
-         stationsService: StationsListServiceProtocol = ServiceManager.shared.createStationsListService()) {
-        self.stationsService = stationsService
+    init(city: String) {
         self.selectedCity = city
-        self.stations = defaultStations // Предполагаем, что есть список станций по умолчанию
+        self.stations = defaultStations
         self.filteredStations = self.stations
         
         $searchText
@@ -50,16 +55,5 @@ class StationSelectionViewModel: ObservableObject {
         } else {
             filteredStations = stations.filter { $0.lowercased().contains(query.lowercased()) }
         }
-    }
-    
-    @MainActor
-    func loadStationsForCity() async {
-        isLoading = true
-        errorMessage = nil
-        
-        // Здесь будет логика загрузки станций
-        
-        isLoading = false
-        self.filterStations(with: searchText)
     }
 }

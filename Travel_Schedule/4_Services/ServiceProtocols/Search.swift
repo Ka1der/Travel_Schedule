@@ -52,8 +52,7 @@ final class SearchListService: SearchServiceProtocol {
             apikey: apikey,
             from: from,
             to: to,
-            transport_types: transportTypes,
-            date: dateString
+            date: dateString, transport_types: transportTypes
         ))
         return try response.ok.body.json
     }

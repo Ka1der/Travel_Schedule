@@ -46,4 +46,3 @@ final class NearestSettlementService: NearestSettlementServiceProtocol {
         return try response.ok.body.json
     }
 }
-

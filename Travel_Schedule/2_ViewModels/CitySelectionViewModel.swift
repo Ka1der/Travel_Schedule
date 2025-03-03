@@ -11,8 +11,10 @@ import Combine
 
 private var defaultCities = [
     "Москва",
-    "Санкт-Петербург",
-    "Краснодар"
+      "Санкт-Петербург",
+      "Краснодар",
+      "Екатеринбург",
+      "Новосибирск"
 ]
 
 class CitySelectionViewModel: ObservableObject {
@@ -22,11 +24,9 @@ class CitySelectionViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
-    private let nearestSettlementService: NearestSettlementServiceProtocol
     private var cancellables = Set<AnyCancellable>()
     
-    init(nearestSettlementService: NearestSettlementServiceProtocol = ServiceManager.shared.createNearestSettlementService()) {
-        self.nearestSettlementService = nearestSettlementService
+    init() {
         self.filteredCities = cities
         
         $searchText
@@ -45,31 +45,5 @@ class CitySelectionViewModel: ObservableObject {
         } else {
             filteredCities = cities.filter { $0.lowercased().contains(query.lowercased()) }
         }
-    }
-    
-    @MainActor
-    func loadNearestCity(latitude: Double, longitude: Double, distance: Int = 50) async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let settlement = try await nearestSettlementService.getNearestSettlement(
-                lat: latitude,
-                lng: longitude,
-                distance: distance
-            )
-            
-            if let cityName = settlement.settlement?.name, !cityName.isEmpty {
-                if !self.cities.contains(cityName) {
-                    self.cities.append(cityName)
-                    self.cities.sort()
-                    self.filterCities(with: searchText)
-                }
-            }
-        } catch {
-            errorMessage = "Ошибка при загрузке городов: \(error.localizedDescription)"
-        }
-        
-        isLoading = false
     }
 }

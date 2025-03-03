@@ -15,6 +15,8 @@ struct RouteSearchFieldView: View {
     
     @State private var isReverseButtonAnimating = false
     
+    private let serviceManager = ServiceManager.shared
+    
     var body: some View {
         HStack {
             ZStack(alignment: .leading) {
@@ -41,6 +43,17 @@ struct RouteSearchFieldView: View {
                             .onTapGesture {
                                 routeViewModel.isSelectingFromCity = true
                                 navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: true))
+                                
+                                    // Test requests
+//                                serviceManager.requestNearestSettlement()
+//                                serviceManager.requestNearestStations() // проверить
+//                                serviceManager.requestThread() // проверить
+//                                serviceManager.requestStationsList()
+//                                serviceManager.requestSearch()
+//                                serviceManager.requestShedule()
+//                                serviceManager.requestCarrier() // проверить
+//                                serviceManager.requestCopyright() // проверить
+                                
                             }
                             .padding(.leading, 16)
                             .padding(.top, 14)

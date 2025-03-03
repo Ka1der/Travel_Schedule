@@ -39,7 +39,6 @@ struct UserAgreementView: View {
             }
         }
         .background(Color(.systemBackground))
-        // Настраиваем внешний вид навигации, чтобы отображался только шеврон без текста "Back"
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
             navigationManager.navigateBack()

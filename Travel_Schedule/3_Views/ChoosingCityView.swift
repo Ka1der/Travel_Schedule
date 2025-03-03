@@ -83,14 +83,5 @@ struct ChoosingCityView: View {
                 }
             }
         }
-        .onAppear {
-            Task {
-                await viewModel.loadNearestCity(
-                    latitude: 59.864177,
-                    longitude: 30.319163,
-                    distance: 100
-                )
-            }
-        }
     }
 }
