@@ -55,7 +55,7 @@ struct CarrierListView: View {
             VStack {
                 Spacer()
                 Button(action: {
-                    
+                    navigationManager.path.append(AppScreen.filters)
                 }) {
                     Text("Уточнить время")
                         .frame(width: 343, height: 60)
