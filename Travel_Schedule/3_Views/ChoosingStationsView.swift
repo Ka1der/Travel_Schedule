@@ -12,6 +12,7 @@ struct ChoosingStationsView: View {
     @ObservedObject var viewModel: StationSelectionViewModel
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var routeViewModel: RouteViewModel
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var isSelectingFromCity: Bool
     
@@ -38,7 +39,7 @@ struct ChoosingStationsView: View {
             }
             .padding(.horizontal)
             .padding(.vertical, 10)
-            .background(Color(.systemGray6))
+            .background(isDarkModeEnabled ? Color(.systemGray5) : Color(.systemGray6))
             .cornerRadius(10)
             .padding()
             
@@ -57,7 +58,7 @@ struct ChoosingStationsView: View {
                     Spacer()
                     
                     Image(systemName: "chevron.right")
-                        .foregroundColor(.black)
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
                 }
                 .padding(.vertical, 8)
                 .contentShape(Rectangle())
@@ -78,10 +79,11 @@ struct ChoosingStationsView: View {
                 }) {
                     HStack(spacing: 2) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(isDarkModeEnabled ? .white : .black)
                     }
                 }
             }
         }
+        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }

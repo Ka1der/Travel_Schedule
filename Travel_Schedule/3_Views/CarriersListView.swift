@@ -12,18 +12,19 @@ struct CarrierListView: View {
     @ObservedObject var viewModel = CarrierViewModel()
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var routeViewModel: RouteViewModel
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         ZStack {
             
-            Color.white.ignoresSafeArea()
+            (isDarkModeEnabled ? Color.black : Color.white).ignoresSafeArea()
             
             VStack(spacing: 0) {
                 VStack {
                     Text("\(routeViewModel.fromCity) (\(routeViewModel.fromStation)) \(Image(systemName: "arrow.right")) \(routeViewModel.toCity) (\(routeViewModel.toStation))")
                         .fontWeight(.bold)
                         .font(.system(size: 24))
-                        .foregroundColor(.black)
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
                         .background(Color.clear)
                 }
                 
@@ -49,7 +50,7 @@ struct CarrierListView: View {
                     .listRowSeparator(.hidden)
                 }
                 .scrollContentBackground(.hidden)
-                .background(Color.white)
+                .background(isDarkModeEnabled ? Color.black : Color.white)
             }
             
             VStack {
@@ -75,10 +76,11 @@ struct CarrierListView: View {
                     navigationManager.path.removeLast()
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(.black)
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
                 }
             }
         }
+        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }
 

@@ -10,6 +10,8 @@ import NavigationKit
 
 struct CarrierInfoView: View {
     @EnvironmentObject var navigationManager: NavigationManager
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
+    
     var carrier: CarrierModel
     
     var body: some View {
@@ -74,6 +76,7 @@ struct CarrierInfoView: View {
             Spacer()
         }
         .padding()
+        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }
 

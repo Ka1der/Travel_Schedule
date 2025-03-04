@@ -10,7 +10,7 @@ import NavigationKit
 
 struct SettingsView: View {
     @EnvironmentObject var navigationManager: NavigationManager
-    @State private var isDarkModeEnabled = false
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         NavigationView {
@@ -65,6 +65,7 @@ struct SettingsView: View {
                 }
             }
         }
+        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }
 

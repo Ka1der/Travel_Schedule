@@ -12,6 +12,7 @@ struct MainView: View {
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var routeViewModel: RouteViewModel
     @EnvironmentObject var mainViewModel: MainViewModel
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         TabView {
@@ -58,7 +59,7 @@ struct MainView: View {
                     Label("", systemImage: "gearshape.fill")
                 }
         }
-        .tint(.black)
+        .tint(isDarkModeEnabled ? .white : .black)
     }
 }
 

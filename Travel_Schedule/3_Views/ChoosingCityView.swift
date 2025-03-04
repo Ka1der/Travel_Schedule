@@ -12,6 +12,7 @@ struct ChoosingCityView: View {
     @ObservedObject var viewModel: CitySelectionViewModel
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var routeViewModel: RouteViewModel
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var isSelectingFromCity: Bool
     
@@ -83,5 +84,6 @@ struct ChoosingCityView: View {
                 }
             }
         }
+        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }
