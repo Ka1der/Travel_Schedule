@@ -14,12 +14,12 @@ final class ServiceManager {
     static let shared = ServiceManager()
     
     private init() {
-      
+        
     }
     
     // MARK: - Nearest Stations
     
-    func requestNearestStations() {
+    func requestNearestStations(for city: Config.Coordinates.City) {
         do {
             let client = try Client(
                 serverURL: Servers.Server1.url(),
@@ -32,16 +32,16 @@ final class ServiceManager {
             Task {
                 do {
                     let stationsResponse = try await service.getNearestStations(
-                        // Координаты Москвы
-                        lat: 55.7522,
-                        lng: 37.6156,
-                        distance: 50
+                        lat: city.lat,
+                        lng: city.lng,
+                        distance: Config.Coordinates.defaultSearchRadius
                     )
-
+                    
                     if let stations = stationsResponse.stations {
+                        print("\nГород: \(city.name)")
                         print("Получено станций: \(stations.count)\n")
                         
-                        for (index, station) in stations.prefix(10).enumerated() { // prefix(10) - выводим 10 станций чтобы не перегружать консоль
+                        for (index, station) in stations.prefix(5).enumerated() { // prefix(10) - выводим 5 станций чтобы не перегружать консоль
                             print("""
                             Станция \(index + 1):
                             - Название: \(station.title)
@@ -55,7 +55,7 @@ final class ServiceManager {
                         }
                     }
                 } catch {
-                    print("Ошибка при получении списка станций: \(error)")
+                    print("Ошибка при получении списка станций для города \(city.name): \(error)")
                 }
             }
         } catch {
@@ -63,8 +63,14 @@ final class ServiceManager {
         }
     }
     
+    func requestNearestStationsForAllCities() {
+        for city in Config.Coordinates.cities {
+            requestNearestStations(for: city)
+        }
+    }
+    
     // MARK: - Thread
-        
+    
     func requestThread() {
         do {
             let client = try Client(
@@ -91,114 +97,114 @@ final class ServiceManager {
     }
     
     // MARK: - Station List
-        
-        func requestStationsList() {
-            do {
-                let client = try Client(
-                    serverURL: Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                let service = StationsListService(
-                    client: client,
-                    apikey: Config.apiKey
-                )
-                Task {
-                    do {
-                        let stations = try await service.getStationsList(
-                            apikey: Config.apiKey
-                        )
-                        print(stations)
-                    } catch {
-                        print("Failed to fetch station list: \(error)")
-                    }
+    
+    func requestStationsList() {
+        do {
+            let client = try Client(
+                serverURL: Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            let service = StationsListService(
+                client: client,
+                apikey: Config.apiKey
+            )
+            Task {
+                do {
+                    let stations = try await service.getStationsList(
+                        apikey: Config.apiKey
+                    )
+                    print(stations)
+                } catch {
+                    print("Failed to fetch station list: \(error)")
                 }
-            } catch {
-                print("Failed to create client: \(error)")
             }
+        } catch {
+            print("Failed to create client: \(error)")
         }
+    }
     
     // MARK: - Search
     
-        func requestSearch() {
-            do {
-                let client = try Client(
-                    serverURL: Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                let service = SearchListService(
-                    client: client,
-                    apikey: Config.apiKey
-                )
-                
-                let dateString = "2025-02-15"
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                guard let date = dateFormatter.date(from: dateString) else {
-                    print("Invalid date string")
-                    return
-                }
-                
-                Task {
-                    do {
-                        let stations = try await service.getScheduleBetweenStations(
-                            apikey: Config.apiKey,
-                            from: "c146",
-                            to: "s9600213",
-                            transportTypes: "plane",
-                            date: date
-                        )
-                        print(stations)
-                    } catch {
-                        print("Failed to fetch search: \(error)")
-                    }
-                }
-            } catch {
-                print("Failed to create client: \(error)")
+    func requestSearch() {
+        do {
+            let client = try Client(
+                serverURL: Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            let service = SearchListService(
+                client: client,
+                apikey: Config.apiKey
+            )
+            
+            let dateString = "2025-02-15"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            guard let date = dateFormatter.date(from: dateString) else {
+                print("Invalid date string")
+                return
             }
+            
+            Task {
+                do {
+                    let stations = try await service.getScheduleBetweenStations(
+                        apikey: Config.apiKey,
+                        from: "c146",
+                        to: "s9600213",
+                        transportTypes: "plane",
+                        date: date
+                    )
+                    print(stations)
+                } catch {
+                    print("Failed to fetch search: \(error)")
+                }
+            }
+        } catch {
+            print("Failed to create client: \(error)")
         }
+    }
     
     // MARK: - Shedule
-        
-        func requestShedule() {
-            do {
-                let client = try Client(
-                    serverURL: Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                let service = ScheduleService(
-                    client: client,
-                    apikey: Config.apiKey
-                )
-                
-                let dateString = "2025-02-15"
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "yyyy-MM-dd"
-                guard let date = dateFormatter.date(from: dateString) else {
-                    print("Invalid date string")
-                    return
-                }
-                
-                Task {
-                    do {
-                        let stations = try await service.getScheduleOnStation(
-                            apikey: Config.apiKey,
-                            station: "s9600213",
-                            transportTypes: "train",
-                            date: date
-                        )
-                        print(stations)
-                    } catch {
-                        print("Failed to fetch schedule: \(error)")
-                    }
-                }
-            } catch {
-                print("Failed to create client: \(error)")
+    
+    func requestShedule() {
+        do {
+            let client = try Client(
+                serverURL: Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            let service = ScheduleService(
+                client: client,
+                apikey: Config.apiKey
+            )
+            
+            let dateString = "2025-02-15"
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            guard let date = dateFormatter.date(from: dateString) else {
+                print("Invalid date string")
+                return
             }
+            
+            Task {
+                do {
+                    let stations = try await service.getScheduleOnStation(
+                        apikey: Config.apiKey,
+                        station: "s9600213",
+                        transportTypes: "train",
+                        date: date
+                    )
+                    print(stations)
+                } catch {
+                    print("Failed to fetch schedule: \(error)")
+                }
+            }
+        } catch {
+            print("Failed to create client: \(error)")
         }
+    }
     
     // MARK: - Nearest Settlement
-        
-    func requestNearestSettlement() {
+    
+    func requestNearestSettlement(for city: Config.Coordinates.City) {
         do {
             let client = try Client(
                 serverURL: Servers.Server1.url(),
@@ -212,13 +218,54 @@ final class ServiceManager {
             Task {
                 do {
                     let settlement = try await service.getNearestSettlement(
-                        lat: 55.7522,
-                        lng: 37.6156,
-                        distance: 50
+                        lat: city.lat,
+                        lng: city.lng,
+                        distance: Config.Coordinates.defaultSearchRadius
                     )
-                    print(settlement)
+                    print("----------------------------------------")
+                    print("""
+                    - Название: \(settlement.title)
+                    - Код: \(settlement.code ?? "Не указан")
+                    - Координаты: \(settlement.lat), \(settlement.lng)
+                    - Расстояние: \(String(format: "%.2f", settlement.distance ?? 0)) км
+                    ----------------------------------------
+                    """)
                 } catch {
-                    print("Failed to fetch nearest settlements: \(error)")
+                    print("Ошибка при получении ближайшего населенного пункта для города \(city.name): \(error)")
+                }
+            }
+        } catch {
+            print("Ошибка при создании клиента: \(error)")
+        }
+    }
+    
+    func requestNearestSettlementForAllCities() {
+        for city in Config.Coordinates.cities {
+            requestNearestSettlement(for: city)
+        }
+    }
+    
+    // MARK: - Carrier
+    
+    func requestCarrier() {
+        do {
+            let client = try Client(
+                serverURL: Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            let service = CarrierService(
+                client: client,
+                apikey: Config.apiKey
+            )
+            Task {
+                do {
+                    let stations = try await service.getCarrier(
+                        apikey: Config.apiKey,
+                        code: "5483"
+                    )
+                    print(stations)
+                } catch {
+                    print("Failed to fetch carrier: \(error)")
                 }
             }
         } catch {
@@ -226,58 +273,30 @@ final class ServiceManager {
         }
     }
     
-    // MARK: - Carrier
-        
-        func requestCarrier() {
-            do {
-                let client = try Client(
-                    serverURL: Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                let service = CarrierService(
-                    client: client,
-                    apikey: Config.apiKey
-                )
-                Task {
-                    do {
-                        let stations = try await service.getCarrier(
-                            apikey: Config.apiKey,
-                            code: "5483"
-                        )
-                        print(stations)
-                    } catch {
-                        print("Failed to fetch carrier: \(error)")
-                    }
-                }
-            } catch {
-                print("Failed to create client: \(error)")
-            }
-        }
-    
     // MARK: - Copyright
-        
-        func requestCopyright() {
-            do {
-                let client = try Client(
-                    serverURL: Servers.Server1.url(),
-                    transport: URLSessionTransport()
-                )
-                let service = CopyrightService(
-                    client: client,
-                    apikey: Config.apiKey
-                )
-                Task {
-                    do {
-                        let stations = try await service.getCopyright(
-                            apikey: Config.apiKey
-                        )
-                        print(stations)
-                    } catch {
-                        print("Failed to fetch copyright: \(error)")
-                    }
+    
+    func requestCopyright() {
+        do {
+            let client = try Client(
+                serverURL: Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            let service = CopyrightService(
+                client: client,
+                apikey: Config.apiKey
+            )
+            Task {
+                do {
+                    let stations = try await service.getCopyright(
+                        apikey: Config.apiKey
+                    )
+                    print(stations)
+                } catch {
+                    print("Failed to fetch copyright: \(error)")
                 }
-            } catch {
-                print("Failed to create client: \(error)")
             }
+        } catch {
+            print("Failed to create client: \(error)")
         }
     }
+}
