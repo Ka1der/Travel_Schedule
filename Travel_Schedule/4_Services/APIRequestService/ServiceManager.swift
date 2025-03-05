@@ -31,18 +31,35 @@ final class ServiceManager {
             )
             Task {
                 do {
-                    let stations = try await service.getNearestStations(
-                        lat: 59.864177,
-                        lng: 30.319163,
+                    let stationsResponse = try await service.getNearestStations(
+                        // Координаты Москвы
+                        lat: 55.7522,
+                        lng: 37.6156,
                         distance: 50
                     )
-                    print(stations)
+
+                    if let stations = stationsResponse.stations {
+                        print("Получено станций: \(stations.count)\n")
+                        
+                        for (index, station) in stations.prefix(10).enumerated() { // prefix(10) - выводим 10 станций чтобы не перегружать консоль
+                            print("""
+                            Станция \(index + 1):
+                            - Название: \(station.title)
+                            - Код: \(station.code)
+                            - Тип станции: \(station.station_type ?? "Не указан")
+                            - Тип транспорта: \(station.transport_type ?? "Не указан")
+                            - Координаты: \(station.lat), \(station.lng)
+                            - Расстояние: \(String(format: "%.2f", station.distance ?? 0)) км
+                            ----------------------------------------
+                            """)
+                        }
+                    }
                 } catch {
-                    print("Failed to fetch nearest stations: \(error)")
+                    print("Ошибка при получении списка станций: \(error)")
                 }
             }
         } catch {
-            print("Failed to create client: \(error)")
+            print("Ошибка при создании клиента: \(error)")
         }
     }
     

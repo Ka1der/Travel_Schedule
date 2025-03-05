@@ -45,8 +45,8 @@ struct RouteSearchFieldView: View {
                                 navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: true))
                                 
                                     // Test requests
-//                                serviceManager.requestNearestSettlement()
-//                                serviceManager.requestNearestStations() // проверить
+                                serviceManager.requestNearestSettlement()
+                                serviceManager.requestNearestStations()
 //                                serviceManager.requestThread() // проверить
 //                                serviceManager.requestStationsList()
 //                                serviceManager.requestSearch()

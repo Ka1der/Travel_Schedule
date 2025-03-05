@@ -328,6 +328,55 @@ paths:
 
 components:
   schemas:
+    Station:
+      type: object
+      properties:
+        code:
+          type: string
+        title:
+          type: string
+        short_title:
+          type: string
+        popular_title:
+          type: string
+        type:
+          type: string
+        type_choices:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        transport_type:
+          type: string
+        station_type:
+          type: string
+        station_type_name:
+          type: string
+        direction:
+          type: string
+        lat:
+          type: number
+          format: double
+        lng:
+          type: number
+          format: double
+        distance:
+          type: number
+          format: double
+        majority:
+          type: integer
+        settlement_title:
+          type: string
+        city_title:
+          type: string
+        country_title:
+          type: string
+        region_title:
+          type: string
+        settlement:
+          type: string
+
     Stations:
       type: object
       properties:
@@ -497,51 +546,6 @@ components:
           type: integer
         offset:
           type: integer
-
-    Station:
-      type: object
-      properties:
-        code:
-          type: string
-        title:
-          type: string
-        short_title:
-          type: string
-        popular_title:
-          type: string
-        type:
-          type: string
-        type_choices:
-          type: string
-        transport_type:
-          type: string
-        station_type:
-          type: string
-        station_type_name:
-          type: string
-        direction:
-          type: string
-        lat:
-          type: number
-          format: double
-        lng:
-          type: number
-          format: double
-        distance:
-          type: number
-          format: double
-        majority:
-          type: integer
-        settlement_title:
-          type: string
-        city_title:
-          type: string
-        country_title:
-          type: string
-        region_title:
-          type: string
-        settlement:
-          type: string
 
     ScheduleItem:
       type: object
