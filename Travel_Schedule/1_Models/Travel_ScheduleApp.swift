@@ -17,7 +17,7 @@ struct Travel_ScheduleApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentViewContainer()
+            SplashScreen()
                 .environmentObject(routeViewModel)
                 .environmentObject(mainViewModel)
                 .withNavigationManager(navigationManager)

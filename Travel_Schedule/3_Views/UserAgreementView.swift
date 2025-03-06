@@ -10,6 +10,7 @@ import NavigationKit
 
 struct UserAgreementView: View {
     @EnvironmentObject var navigationManager: NavigationManager
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -20,17 +21,17 @@ struct UserAgreementView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     Text("ОФЕРТА\nПользовательское соглашение")
                         .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.black)
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
                         .padding(.bottom, 8)
                         
                     Text("Редакция от 15.08.2023")
                         .font(.system(size: 14))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
                         .padding(.bottom, 16)
                     
                     Text(fullAgreementText)
                         .font(.system(size: 14))
-                        .foregroundColor(.black.opacity(0.7))
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
                         .lineSpacing(4)
                 }
                 .padding(.horizontal, 16)
@@ -45,7 +46,7 @@ struct UserAgreementView: View {
         }) {
             Image(systemName: "chevron.left")
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(.black)
+                .foregroundColor(isDarkModeEnabled ? .white : .black)
         })
         .navigationBarTitle("Пользовательское соглашение", displayMode: .inline)
     }

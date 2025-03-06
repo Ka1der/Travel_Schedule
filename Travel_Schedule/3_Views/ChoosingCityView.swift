@@ -79,7 +79,7 @@ struct ChoosingCityView: View {
                 }) {
                     HStack(spacing: 2) {
                         Image(systemName: "chevron.left")
-                            .foregroundColor(.black)
+                            .foregroundColor(isDarkModeEnabled ? .white : .black)
                     }
                 }
             }

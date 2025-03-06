@@ -16,22 +16,6 @@ struct CarrierInfoView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            HStack {
-                Button(action: {
-                    navigationManager.navigateBack()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.black)
-                }
-                Spacer()
-                Text("Информация о перевозчике")
-                    .font(.headline)
-                    .bold()
-                Spacer()
-                Image(systemName: "chevron.left")
-                    .opacity(0)
-            }
-            .padding()
             
             VStack(spacing: 10) {
                 Image("rzdLogo")
@@ -46,6 +30,7 @@ struct CarrierInfoView: View {
                     Spacer()
                 }
             }
+            .padding(.top, 16)
             
             VStack(spacing: 16) {
                 HStack {
@@ -77,6 +62,14 @@ struct CarrierInfoView: View {
         }
         .padding()
         .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: Button(action: {
+            navigationManager.navigateBack()
+        }) {
+            Image(systemName: "chevron.left")
+                .font(.system(size: 18, weight: .semibold))
+                .foregroundColor(isDarkModeEnabled ? .white : .black)
+        })
     }
 }
 

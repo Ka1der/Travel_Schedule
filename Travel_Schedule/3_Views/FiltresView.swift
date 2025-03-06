@@ -11,6 +11,7 @@ struct FiltersView: View {
     @State private var selectedTimes: Set<String> = []
     @State private var showTransfers: Bool? = nil
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     private let timePeriods = [
         "Утро 06:00 - 12:00",
@@ -50,6 +51,7 @@ struct FiltersView: View {
                     RadioButton(text: "Да", isSelected: showTransfers == true) {
                         showTransfers = true
                     }
+                    
                     RadioButton(text: "Нет", isSelected: showTransfers == false) {
                         showTransfers = false
                     }
@@ -86,7 +88,7 @@ struct FiltersView: View {
                 presentationMode.wrappedValue.dismiss()
             }) {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(.black)
+                    .foregroundColor(isDarkModeEnabled ? .white : .black)
                     .font(.system(size: 17))
             }
         )
@@ -97,24 +99,25 @@ struct FiltersView: View {
 struct CheckBox: View {
     var isChecked: Bool
     var action: () -> Void
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         Button(action: action) {
             ZStack {
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(Color.black, lineWidth: 2)
+                    .stroke(isDarkModeEnabled ? .white : .black, lineWidth: 2)
                     .frame(width: 24, height: 24)
                 
                 if isChecked {
                     RoundedRectangle(cornerRadius: 4)
-                        .fill(Color.black)
+                        .fill(isDarkModeEnabled ? .white : .black)
                         .frame(width: 24, height: 24)
                         .overlay(
                             Image(systemName: "checkmark")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 12, height: 12)
-                                .foregroundColor(.white)
+                                .foregroundColor(isDarkModeEnabled ? .black : .white)
                         )
                 }
             }
@@ -127,6 +130,7 @@ struct RadioButton: View {
     var text: String
     var isSelected: Bool
     var action: () -> Void
+    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         HStack {
@@ -136,12 +140,12 @@ struct RadioButton: View {
             Button(action: action) {
                 ZStack {
                     Circle()
-                        .stroke(Color.black, lineWidth: 2)
+                        .stroke(isDarkModeEnabled ? .white : .black, lineWidth: 2)
                         .frame(width: 24, height: 24)
                     
                     if isSelected {
                         Circle()
-                            .fill(Color.black)
+                            .fill(isDarkModeEnabled ? .white : .black)
                             .frame(width: 12, height: 12)
                     }
                 }
