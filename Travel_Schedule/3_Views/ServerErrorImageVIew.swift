@@ -6,8 +6,11 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct ServerErrorView: View {
+    @EnvironmentObject var navigationManager: NavigationManager
+    
     var body: some View {
         
         VStack{
@@ -26,4 +29,5 @@ struct ServerErrorView: View {
 
 #Preview {
     ServerErrorView()
+        .environmentObject(NavigationManager())
 }
