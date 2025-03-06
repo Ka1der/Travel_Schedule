@@ -43,4 +43,26 @@ struct Config {
            
            static let defaultSearchRadius = 50
        }
+    
+    struct SearchSettings {
+          struct Route {
+              let from: String
+              let to: String
+              let name: String
+              let transportType: String
+          }
+          
+          static let simferopolToSheremetyevo = Route(
+              from: "c146",
+              to: "s9600213",
+              name: "Симферополь - Шереметьево",
+              transportType: "plane"
+          )
+          
+          static let defaultRoutes: [Route] = [
+              simferopolToSheremetyevo
+          ]
+          
+          static let defaultDate = "2025-03-08"
+      }
    }

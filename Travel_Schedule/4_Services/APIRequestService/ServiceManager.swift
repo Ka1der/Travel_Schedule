@@ -136,30 +136,53 @@ final class ServiceManager {
                 apikey: Config.apiKey
             )
             
-            let dateString = "2025-02-15"
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            guard let date = dateFormatter.date(from: dateString) else {
-                print("Invalid date string")
+            guard let date = dateFormatter.date(from: Config.SearchSettings.defaultDate) else {
+                print("Некорректная дата")
                 return
             }
             
             Task {
-                do {
-                    let stations = try await service.getScheduleBetweenStations(
-                        apikey: Config.apiKey,
-                        from: "c146",
-                        to: "s9600213",
-                        transportTypes: "plane",
-                        date: date
-                    )
-                    print(stations)
-                } catch {
-                    print("Failed to fetch search: \(error)")
+                for route in Config.SearchSettings.defaultRoutes {
+                    do {
+                        print("Поиск маршрута: \(route.name)")
+                        let stations = try await service.getScheduleBetweenStations(
+                            apikey: Config.apiKey,
+                            from: route.from,
+                            to: route.to,
+                            transportTypes: route.transportType,
+                            date: date
+                        )
+                        printSearchResults(stations)
+                    } catch {
+                        print("Ошибка при поиске маршрута \(route.name): \(error)")
+                    }
                 }
             }
         } catch {
-            print("Failed to create client: \(error)")
+            print("Ошибка при создании клиента: \(error)")
+        }
+    }
+
+    private func printSearchResults(_ stations: Components.Schemas.Search) {
+        print("Расписание рейсов между станциями")
+        
+        print("Откуда:")
+        if let from = stations.search?.from {
+            print("- Код: \(from.code ?? "Не указан")")
+            print("- Название: \(from.title ?? "Не указано")")
+            print("- Тип: \(from._type ?? "Не указан")")
+        }
+        
+        print("\nКуда:")
+        if let to = stations.search?.to {
+            print("- Код: \(to.code ?? "Не указан")")
+            print("- Название: \(to.title ?? "Не указано")")
+            print("- Тип: \(to._type ?? "Не указан")")
+            print("- Тип транспорта: \(to.transport_type ?? "Не указан")")
+            print("- Тип станции: \(to.station_type ?? "Не указан")")
+            print("- Название типа станции: \(to.station_type_name ?? "Не указано")")
         }
     }
     
