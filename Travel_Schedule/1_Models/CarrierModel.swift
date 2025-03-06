@@ -6,11 +6,16 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct CarrierModel: Identifiable, Hashable {
     let id = UUID()
     let name: String
     let logo: String
+    
+    var logoImage: Image {
+        Image(logo)
+    }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
