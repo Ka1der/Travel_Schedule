@@ -43,17 +43,6 @@ struct RouteSearchFieldView: View {
                             .onTapGesture {
                                 routeViewModel.isSelectingFromCity = true
                                 navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: true))
-                                
-                                    // Test requests
-//                                serviceManager.requestNearestSettlementForAllCities()
-//                                serviceManager.requestNearestStationsForAllCities()
-//                                serviceManager.requestThread() // проверить
-//                                serviceManager.requestStationsList()
-                                serviceManager.requestSearch()
-//                                serviceManager.requestShedule()
-//                                serviceManager.requestCarrier() // проверить
-//                                serviceManager.requestCopyright() // проверить
-                                
                             }
                             .padding(.leading, 16)
                             .padding(.top, 14)

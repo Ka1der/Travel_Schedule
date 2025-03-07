@@ -227,7 +227,7 @@ final class ServiceManager {
     
     // MARK: - Nearest Settlement
     
-    func requestNearestSettlement(for city: Config.Coordinates.City) {
+    func requestNearestSettlement(for city: Config.Coordinates.City) async {
         do {
             let client = try Client(
                 serverURL: Servers.Server1.url(),
@@ -262,9 +262,9 @@ final class ServiceManager {
         }
     }
     
-    func requestNearestSettlementForAllCities() {
+    func requestNearestSettlementForAllCities() async {
         for city in Config.Coordinates.cities {
-            requestNearestSettlement(for: city)
+            await requestNearestSettlement(for: city)
         }
     }
     

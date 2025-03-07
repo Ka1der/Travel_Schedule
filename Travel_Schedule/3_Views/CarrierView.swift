@@ -58,7 +58,7 @@ struct CarrierView: View {
                 HStack(spacing: 4) {
                     Text("22:30")
                         .font(.system(size: 17, weight: .regular))
-                        .padding(.trailing, 5)
+                        .padding(.trailing, 4)
                     Rectangle()
                         .frame(width: 74.5, height: 1)
                             .foregroundColor(.gray)
@@ -71,7 +71,7 @@ struct CarrierView: View {
                             .foregroundColor(.gray)
                     Text("08:15")
                         .font(.system(size: 17, weight: .regular))
-                        .padding(.leading, 5)
+                        .padding(.leading, 4)
                 }
                 .foregroundColor(isDarkModeEnabled ? .white : .black)
             }

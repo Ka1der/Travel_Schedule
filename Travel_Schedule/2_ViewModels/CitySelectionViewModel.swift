@@ -9,6 +9,14 @@ import Foundation
 import SwiftUI
 import Combine
 
+private var mockCities = [
+    "Москва",
+      "Санкт-Петербург",
+      "Краснодар",
+      "Екатеринбург",
+      "Новосибирск"
+]
+
 private var defaultCities = [
     "Москва",
       "Санкт-Петербург",
