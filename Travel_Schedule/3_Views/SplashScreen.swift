@@ -6,22 +6,23 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct SplashScreen: View {
+    @EnvironmentObject var navigationManager: NavigationManager
+    @EnvironmentObject var routeModel: RouteViewModel
     @State private var isActive = false
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                if isActive {
-                    MainView()
-                } else {
-                    Image("SplashScreen")
-                        .resizable()
-                        .ignoresSafeArea()
-                }
+        ZStack {
+            if isActive {
+                ContentViewContainer()
+                    .environmentObject(routeModel)
+            } else {
+                Image("SplashScreen")
+                    .resizable()
+                    .ignoresSafeArea()
             }
-            .navigationBarHidden(true)
         }
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -33,12 +34,8 @@ struct SplashScreen: View {
     }
 }
 
-struct MainScreen: View {
-    var body: some View {
-        Text("Главный экран")
-    }
-}
-
 #Preview {
     SplashScreen()
+        .environmentObject(RouteViewModel())
+        .environmentObject(NavigationKit.createNavigationManager())
 }

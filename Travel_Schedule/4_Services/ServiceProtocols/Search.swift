@@ -1,5 +1,5 @@
 //
-//  Schedule.swift
+//  Search.swift
 //  Travel_Schedule
 //
 //  Created by Kaider on 09.02.2025.
@@ -9,18 +9,19 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
-typealias ScheduleList = Components.Schemas.Schedule
+typealias Search = Components.Schemas.Search
 
-protocol ScheduleServiceProtocol {
-    func getScheduleOnStation(
+protocol SearchServiceProtocol {
+    func getScheduleBetweenStations(
         apikey: String,
-        station: String,
+        from: String,
+        to: String,
         transportTypes: String,
         date: Date
-    ) async throws -> ScheduleList
+    ) async throws -> Search
 }
 
-final class ScheduleService: ScheduleServiceProtocol {
+final class SearchListService: SearchServiceProtocol {
     private let client: Client
     private let apikey: String
     
@@ -34,25 +35,25 @@ final class ScheduleService: ScheduleServiceProtocol {
         client: Client,
         apikey: String
     ) {
-        self.client = client
-        self.apikey = apikey
-    }
+            self.client = client
+            self.apikey = apikey
+        }
     
-    func getScheduleOnStation(
+    func getScheduleBetweenStations(
         apikey: String,
-        station: String,
-        transportTypes:
-        String, date: Date
-    ) async throws -> ScheduleList {
+        from: String,
+        to: String,
+        transportTypes: String,
+        date: Date
+    ) async throws -> Search {
         
         let dateString = dateFormatter.string(from: date)
-        let response = try await client.getScheduleOnStation(query: .init(
+        let response = try await client.getScheduleBetweenStations(query: .init(
             apikey: apikey,
-            station: station,
-            transport_types: transportTypes,
-            date: dateString
+            from: from,
+            to: to,
+            date: dateString, transport_types: transportTypes
         ))
         return try response.ok.body.json
     }
 }
-

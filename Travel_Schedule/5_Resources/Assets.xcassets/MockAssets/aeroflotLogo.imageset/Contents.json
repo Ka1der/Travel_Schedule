@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "9d1ae4eee3d5784232bc3976d3a98dd4.png",
+      "filename" : "aeroflotLogo.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Splash Screen@2x.png",
+      "filename" : "aeroflotLogo@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Splash Screen@3x.png",
+      "filename" : "aeroflotLogo@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
