@@ -14,11 +14,11 @@ struct ChoosingCityView: View {
     @EnvironmentObject var routeViewModel: RouteViewModel
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
-    var isSelectingFromCity: Bool
+    var selectionState: RouteViewModel.SelectionState
     
     init(viewModel: CitySelectionViewModel, isSelectingFromCity: Bool) {
         self.viewModel = viewModel
-        self.isSelectingFromCity = isSelectingFromCity
+        self.selectionState = isSelectingFromCity ? .from : .to
     }
     
     var body: some View {
@@ -63,8 +63,8 @@ struct ChoosingCityView: View {
                 .padding(.vertical, 8)
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    routeViewModel.selectCity(city: city, isFromCity: isSelectingFromCity)
-                    navigationManager.path.append(AppScreen.choosingStation(isSelectingFromCity: isSelectingFromCity))
+                    routeViewModel.selectCity(city, for: selectionState)
+                    navigationManager.path.append(AppScreen.choosingStation(isSelectingFromCity: selectionState == .from))
                 }
                 .listRowSeparator(.hidden)
             }

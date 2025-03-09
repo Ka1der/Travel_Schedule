@@ -10,6 +10,7 @@ import NavigationKit
 
 struct CarrierView: View {
     let carrier: CarrierModel
+    @StateObject private var viewModel = CarrierViewModel()
     @EnvironmentObject var navigationManager: NavigationManager
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
@@ -23,8 +24,7 @@ struct CarrierView: View {
             
             VStack(spacing: 8) {
                 HStack(spacing: 16) {
-                    carrier.logoImage
-                        .resizable()
+                    CarrierLogoView(logo: carrier.logo)
                         .scaledToFit()
                         .frame(width: 38, height: 38)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -78,6 +78,23 @@ struct CarrierView: View {
             .padding(.horizontal, 16)
         }
         .padding(.horizontal, 16)
+    }
+}
+
+struct CarrierLogoView: View {
+    let logo: Image
+    
+    var body: some View {
+        logo
+            .resizable()
+            .scaledToFit()
+            .frame(width: 38, height: 38)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .background(
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.white)
+                    .shadow(color: .gray.opacity(0.2), radius: 4)
+            )
     }
 }
 

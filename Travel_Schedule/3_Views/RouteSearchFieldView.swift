@@ -9,18 +9,13 @@ import SwiftUI
 import NavigationKit
 
 struct RouteSearchFieldView: View {
-    
     @EnvironmentObject var routeViewModel: RouteViewModel
     @EnvironmentObject var navigationManager: NavigationManager
-    
     @State private var isReverseButtonAnimating = false
-    
-    private let serviceManager = ServiceManager.shared
     
     var body: some View {
         HStack {
             ZStack(alignment: .leading) {
-                
                 RoundedRectangle(cornerRadius: 20)
                     .foregroundStyle(Color.blue)
                     .frame(width: 343, height: 128)
@@ -32,8 +27,8 @@ struct RouteSearchFieldView: View {
                 
                 HStack {
                     VStack(spacing: 0) {
-                        Text(routeViewModel.getFormattedFromText())
-                            .foregroundColor(routeViewModel.fromCity.isEmpty ? .gray : .black)
+                        Text(routeViewModel.fromText)
+                            .foregroundColor(routeViewModel.fromPoint.isEmpty ? .gray : .black)
                             .frame(width: 227, alignment: .leading)
                             .frame(height: 48)
                             .font(.system(size: 17))
@@ -41,14 +36,14 @@ struct RouteSearchFieldView: View {
                             .truncationMode(.tail)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                routeViewModel.isSelectingFromCity = true
+                                routeViewModel.selectionState = .from
                                 navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: true))
                             }
                             .padding(.leading, 16)
                             .padding(.top, 14)
                         
-                        Text(routeViewModel.getFormattedToText())
-                            .foregroundColor(routeViewModel.toCity.isEmpty ? .gray : .black)
+                        Text(routeViewModel.toText)
+                            .foregroundColor(routeViewModel.toPoint.isEmpty ? .gray : .black)
                             .frame(width: 227, alignment: .leading)
                             .frame(height: 48)
                             .font(.system(size: 17))
@@ -56,7 +51,7 @@ struct RouteSearchFieldView: View {
                             .truncationMode(.tail)
                             .contentShape(Rectangle())
                             .onTapGesture {
-                                routeViewModel.isSelectingFromCity = false
+                                routeViewModel.selectionState = .to
                                 navigationManager.path.append(AppScreen.choosingCity(isSelectingFromCity: false))
                             }
                             .padding(.leading, 16)
@@ -79,7 +74,7 @@ struct RouteSearchFieldView: View {
                                 isReverseButtonAnimating = true
                             }
                             
-                            routeViewModel.swapCities()
+                            routeViewModel.swapPoints()
                             
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                                 withAnimation(.spring(duration: 0.3)) {

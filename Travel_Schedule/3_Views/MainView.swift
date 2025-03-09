@@ -18,43 +18,44 @@ struct MainView: View {
     var body: some View {
         
         TabView {
-            VStack {
-                GeometryReader { geometry in
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(0..<5) { _ in
-                                StoriesView()
-                                    .padding(.horizontal, 6)
-                            }
-                        }
-                        .padding(.vertical, 10)
-                        .padding(.leading, 16)
-                    }
-                    
-                    RouteSearchFieldView()
-                        .position(x: geometry.size.width / 2, y: geometry.size.height - 413)
-                    VStack{
-                        if !routeViewModel.fromCity.isEmpty && !routeViewModel.toCity.isEmpty {
-                            Button(action: {
-                                navigationManager.path.append(AppScreen.carrierList)
-                            }) {
-                                Text("Найти")
-                                    .frame(width: 150, height: 60)
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 17))
-                                    .background(Color.blue)
-                                    .foregroundColor(.white)
-                                    .cornerRadius(16)
-                            }
-                            .transition(.opacity)
-                        }
-                    }
-                    .position(x: geometry.size.width / 2, y: (geometry.size.height - 413 + 110))
-                }
-            }
-            .tabItem {
-                Label("", systemImage: "arrow.up.message.fill")
-            }
+                   VStack {
+                       GeometryReader { geometry in
+                           ScrollView(.horizontal, showsIndicators: false) {
+                               HStack {
+                                   ForEach(0..<5) { _ in
+                                       StoriesView()
+                                           .padding(.horizontal, 6)
+                                   }
+                               }
+                               .padding(.vertical, 10)
+                               .padding(.leading, 16)
+                           }
+                           
+                           RouteSearchFieldView()
+                               .position(x: geometry.size.width / 2, y: geometry.size.height - 413)
+                           
+                           VStack {
+                               if !routeViewModel.fromPoint.isEmpty && !routeViewModel.toPoint.isEmpty {
+                                   Button(action: {
+                                       navigationManager.path.append(AppScreen.carrierList)
+                                   }) {
+                                       Text("Найти")
+                                           .frame(width: 150, height: 60)
+                                           .fontWeight(.bold)
+                                           .font(.system(size: 17))
+                                           .background(Color.blue)
+                                           .foregroundColor(.white)
+                                           .cornerRadius(16)
+                                   }
+                                   .transition(.opacity)
+                               }
+                           }
+                           .position(x: geometry.size.width / 2, y: (geometry.size.height - 413 + 110))
+                       }
+                   }
+                   .tabItem {
+                       Label("", systemImage: "arrow.up.message.fill")
+                   }
             
             SettingsView()
                 .tabItem {

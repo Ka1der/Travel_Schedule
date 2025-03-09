@@ -9,7 +9,7 @@ import SwiftUI
 
 struct StoriesView: View {
     var body: some View {
-        GeometryReader { geomery in
+   
             ZStack{
                 Image("StoriesTestPicture")
                     .resizable()
@@ -28,7 +28,7 @@ struct StoriesView: View {
                     .stroke(Color.blue, lineWidth: 4)
                     .frame(width: 92, height: 140)
             }
-        }
+        
         .frame(width: 92, height: 140)
     }
 }

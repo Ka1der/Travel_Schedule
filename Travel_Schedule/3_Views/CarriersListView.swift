@@ -19,31 +19,31 @@ struct CarrierListView: View {
             (isDarkModeEnabled ? Color.black : Color.white).ignoresSafeArea()
             
             VStack(spacing: 0) {
-                         VStack {
-                             Text("\(routeViewModel.fromCity) (\(routeViewModel.fromStation)) \(Image(systemName: "arrow.right")) \(routeViewModel.toCity) (\(routeViewModel.toStation))")
-                                 .fontWeight(.bold)
-                                 .font(.system(size: 24))
-                                 .foregroundColor(isDarkModeEnabled ? .white : .black)
-                                 .background(Color.clear)
-                         }
-                         .frame(maxWidth: .infinity, alignment: .leading)
-                         .padding(.horizontal, 16)
-                         .padding(.bottom, 16)
-                         
-                         List(viewModel.carriers) { carrier in
-                             CarrierView(carrier: carrier)
-                                 .contentShape(Rectangle())
-                                 .onTapGesture {
-                                     navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
-                                 }
-                                 .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
-                                 .listRowBackground(Color.clear)
-                                 .listRowSeparator(.hidden)
-                         }
-                         .scrollContentBackground(.hidden)
-                         .background(isDarkModeEnabled ? Color.black : Color.white)
-                         .listStyle(PlainListStyle())
-                     }
+                VStack {
+                    Text("\(routeViewModel.fromText) \(Image(systemName: "arrow.right")) \(routeViewModel.toText)")
+                        .fontWeight(.bold)
+                        .font(.system(size: 24))
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
+                        .background(Color.clear)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+                
+                List(viewModel.carriers) { carrier in
+                    CarrierView(carrier: carrier)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
+                        }
+                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
+                }
+                .scrollContentBackground(.hidden)
+                .background(isDarkModeEnabled ? Color.black : Color.white)
+                .listStyle(PlainListStyle())
+            }
             
             VStack {
                 Spacer()

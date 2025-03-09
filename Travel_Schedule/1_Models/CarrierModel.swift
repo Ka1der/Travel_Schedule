@@ -11,11 +11,13 @@ import SwiftUI
 struct CarrierModel: Identifiable, Hashable {
     let id = UUID()
     let name: String
-    let logo: String
+    let logo: Image
     
-    var logoImage: Image {
-        Image(logo)
+    init(name: String, logo: String) {
+        self.name = name
+        self.logo = Image(logo)
     }
+
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

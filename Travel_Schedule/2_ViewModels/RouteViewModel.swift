@@ -9,75 +9,54 @@ import Foundation
 import SwiftUI
 import Combine
 
-class RouteViewModel: ObservableObject {
-    @Published var fromCity: String = ""
-    @Published var toCity: String = ""
-    @Published var fromStation: String = ""
-    @Published var toStation: String = ""
-    @Published var isSelectingFromCity: Bool = true
+final class RouteViewModel: ObservableObject {
+    enum SelectionState {
+        case from, to
+    }
+    
+    @Published var fromPoint = RoutePoint()
+    @Published var toPoint = RoutePoint()
+    @Published var selectionState: SelectionState = .from
     @Published var canSearch: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
     init() {
         Publishers.CombineLatest(
-            $fromCity.map { !$0.isEmpty },
-            $toCity.map { !$0.isEmpty }
+            $fromPoint.map { !$0.isEmpty },
+            $toPoint.map { !$0.isEmpty }
         )
         .map { $0 && $1 }
         .assign(to: \.canSearch, on: self)
         .store(in: &cancellables)
     }
     
-    func swapCities() {
-        let tempCity = fromCity
-        let tempStation = fromStation
-        
-        fromCity = toCity
-        fromStation = toStation
-        
-        toCity = tempCity
-        toStation = tempStation
+    func swapPoints() {
+        (fromPoint, toPoint) = (toPoint, fromPoint)
     }
     
-    func getFormattedFromText() -> String {
-        if fromCity.isEmpty {
-            return "Откуда"
-        } else if fromStation.isEmpty {
-            return fromCity
-        } else {
-            return "\(fromCity) (\(fromStation))"
+    var fromText: String { fromPoint.formattedText }
+    var toText: String { toPoint.formattedText }
+    
+    func selectCity(_ city: String, for state: SelectionState) {
+        switch state {
+        case .from:
+            fromPoint.city = city
+        case .to:
+            toPoint.city = city
         }
     }
     
-    func getFormattedToText() -> String {
-        if toCity.isEmpty {
-            return "Куда"
-        } else if toStation.isEmpty {
-            return toCity
-        } else {
-            return "\(toCity) (\(toStation))"
+    func selectStation(_ station: String, for state: SelectionState) {
+        switch state {
+        case .from:
+            fromPoint.station = station
+        case .to:
+            toPoint.station = station
         }
     }
     
-    func selectCity(city: String, isFromCity: Bool) {
-        if isFromCity {
-            fromCity = city
-        } else {
-            toCity = city
-        }
-    }
-    
-    func selectStation(station: String, isFromCity: Bool) {
-        if isFromCity {
-            fromStation = station
-        } else {
-            toStation = station
-        }
-    }
-    
-    // Метод для поиска маршрутов (будет реализован позже)
     func searchRoutes() {
-        // Здесь будет логика поиска маршрутов
+        // Будущая реализация поиска маршрутов
     }
 }

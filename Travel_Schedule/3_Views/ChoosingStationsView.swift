@@ -14,11 +14,11 @@ struct ChoosingStationsView: View {
     @EnvironmentObject var routeViewModel: RouteViewModel
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
-    var isSelectingFromCity: Bool
+    var selectionState: RouteViewModel.SelectionState
     
     init(viewModel: StationSelectionViewModel, isSelectingFromCity: Bool) {
         self.viewModel = viewModel
-        self.isSelectingFromCity = isSelectingFromCity
+        self.selectionState = isSelectingFromCity ? .from : .to
     }
     
     var body: some View {
@@ -51,25 +51,25 @@ struct ChoosingStationsView: View {
             }
             
             List(viewModel.filteredStations, id: \.self) { station in
-                HStack {
-                    Text(station)
-                        .font(.system(size: 17))
-                    
-                    Spacer()
-                    
-                    Image(systemName: "chevron.right")
-                        .foregroundColor(isDarkModeEnabled ? .white : .black)
-                }
-                .padding(.vertical, 8)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    routeViewModel.selectStation(station: station, isFromCity: isSelectingFromCity)
-                    navigationManager.path.removeLast(navigationManager.path.count)
-                }
-                .listRowSeparator(.hidden)
-            }
-            .listStyle(PlainListStyle())
-        }
+                          HStack {
+                              Text(station)
+                                  .font(.system(size: 17))
+                              
+                              Spacer()
+                              
+                              Image(systemName: "chevron.right")
+                                  .foregroundColor(isDarkModeEnabled ? .white : .black)
+                          }
+                          .padding(.vertical, 8)
+                          .contentShape(Rectangle())
+                          .onTapGesture {
+                              routeViewModel.selectStation(station, for: selectionState)
+                              navigationManager.path.removeLast(navigationManager.path.count)
+                          }
+                          .listRowSeparator(.hidden)
+                      }
+                      .listStyle(PlainListStyle())
+                  }
         .navigationTitle("Выбор станции")
         .navigationBarBackButtonHidden(true)
         .toolbar {

@@ -40,7 +40,7 @@ enum AppScreen: Screen, Hashable {
         case .carrierInfo(let carrier):
             CarrierInfoView(carrier: carrier)
         case .filters:
-                 FiltersView()
+            FiltersView()
         }
     }
 }
