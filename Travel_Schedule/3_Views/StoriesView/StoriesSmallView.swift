@@ -1,5 +1,5 @@
 //
-//  StoriesView.swift
+//  StoriesSmallView.swift
 //  Travel_Schedule
 //
 //  Created by Kaider on 23.02.2025.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StoriesView: View {
+struct StoriesSmallView: View {
     var body: some View {
    
             ZStack{
@@ -34,5 +34,5 @@ struct StoriesView: View {
 }
 
 #Preview {
-    StoriesView()
+    StoriesSmallView()
 }

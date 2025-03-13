@@ -23,7 +23,7 @@ struct MainView: View {
                            ScrollView(.horizontal, showsIndicators: false) {
                                HStack {
                                    ForEach(0..<5) { _ in
-                                       StoriesView()
+                                       StoriesSmallView()
                                            .padding(.horizontal, 6)
                                    }
                                }
