@@ -26,6 +26,9 @@ struct MainView: View {
                                        StoriesSmallView()
                                            .padding(.horizontal, 6)
                                    }
+                                   .onTapGesture {
+                                       navigationManager.path.append(AppScreen.storiesLargeView)
+                                   }
                                }
                                .padding(.vertical, 10)
                                .padding(.leading, 16)

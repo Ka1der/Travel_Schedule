@@ -14,8 +14,8 @@ final class RouteViewModel: ObservableObject {
         case from, to
     }
     
-    @Published var fromPoint = RoutePoint()
-    @Published var toPoint = RoutePoint()
+    @Published var fromPoint = RoutePoint(type: .from)
+    @Published var toPoint = RoutePoint(type: .to)
     @Published var selectionState: SelectionState = .from
     @Published var canSearch: Bool = false
     

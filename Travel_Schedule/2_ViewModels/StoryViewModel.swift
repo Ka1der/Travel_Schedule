@@ -9,8 +9,8 @@ import SwiftUI
 import Combine
 
 class StoryViewModel: ObservableObject {
-    @Published private var currentStory: Story
-    @Published private var currentStoryIndex: Int = 0
+    @Published var currentStory: Story
+    @Published var currentStoryIndex: Int = 0
     
     private let stories: [Story]
     private let timerInterval: TimeInterval = 5
