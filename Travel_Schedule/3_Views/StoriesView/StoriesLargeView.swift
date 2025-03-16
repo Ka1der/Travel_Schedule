@@ -5,6 +5,7 @@
 //  Created by Kaider on 13.03.2025.
 //
 
+
 import SwiftUI
 import NavigationKit
 
@@ -26,8 +27,12 @@ struct StoriesLargeView: View {
                 
                 VStack{
                     HStack{
-                        ForEach(0..<Story.allStories.count) { _ in
-                            ProgressBarView()
+                        ForEach(0..<Story.allStories.count, id: \.self) { index in
+                            ProgressBarView(
+                                index: index,
+                                currentIndex: viewModel.currentStoryIndex,
+                                progress: viewModel.progress
+                            )
                         }
                     }
                     .padding(.horizontal, 12)
@@ -86,4 +91,3 @@ struct StoriesLargeView: View {
     StoriesLargeView(story: Story.allStories[0])
         .environmentObject(NavigationKit.createNavigationManager())
 }
-

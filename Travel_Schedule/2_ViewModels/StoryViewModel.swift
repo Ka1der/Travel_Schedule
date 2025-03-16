@@ -11,10 +11,12 @@ import Combine
 class StoryViewModel: ObservableObject {
     @Published var currentStory: Story
     @Published var currentStoryIndex: Int = 0
+    @Published var progress: CGFloat = 0
     
     private let stories: [Story]
-    private let timerInterval: TimeInterval = 5
+    private let timerInterval: TimeInterval = 0.05
     private var timer: AnyCancellable?
+    private let storyDuration: TimeInterval = 5
     
     init(stories: [Story] = Story.allStories) {
         self.stories = stories
@@ -22,10 +24,16 @@ class StoryViewModel: ObservableObject {
     }
     
     func startTimer() {
+        progress = 0
         timer = Timer.publish(every: timerInterval, on: .main, in: .common)
             .autoconnect()
             .sink { _ in
-                self.nextStory()
+                if self.progress >= 1.0 {
+                    self.nextStory()
+                    self.progress = 0
+                } else {
+                    self.progress += CGFloat(self.timerInterval / self.storyDuration)
+                }
             }
     }
     
@@ -44,4 +52,3 @@ class StoryViewModel: ObservableObject {
         currentStory = stories[currentStoryIndex]
     }
 }
-
