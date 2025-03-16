@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct StoriesSmallView: View {
+    let story: Story
+    
     var body: some View {
    
             ZStack{
-                Image("StoriesTestPicture")
+                Image(story.backgroundImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 92, height: 140)
@@ -19,7 +21,9 @@ struct StoriesSmallView: View {
                     .clipped()
                 VStack {
                     Spacer()
-                    Text("Test Text")
+                    Text(story.title)
+                        .font(.caption)
+                        .lineLimit(1)
                         .foregroundStyle(.white)
                         .padding(.bottom, 8)
                 }
@@ -34,5 +38,5 @@ struct StoriesSmallView: View {
 }
 
 #Preview {
-    StoriesSmallView()
+    StoriesSmallView(story: Story.allStories[0])
 }
