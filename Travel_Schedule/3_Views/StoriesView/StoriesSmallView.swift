@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StoriesSmallView: View {
     let story: Story
+    let isViewed: Bool
     
     var body: some View {
    
@@ -19,6 +20,7 @@ struct StoriesSmallView: View {
                     .frame(width: 92, height: 140)
                     .cornerRadius(16)
                     .clipped()
+                    .saturation(isViewed ? 0.5 : 1)
                 VStack {
                     Spacer()
                     Text(story.title)
@@ -38,5 +40,5 @@ struct StoriesSmallView: View {
 }
 
 #Preview {
-    StoriesSmallView(story: Story.allStories[0])
+    StoriesSmallView(story: Story.allStories[0], isViewed: false)
 }

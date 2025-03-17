@@ -13,7 +13,7 @@ struct StoriesLargeView: View {
     
     let story: Story
     @EnvironmentObject var navigationManager: NavigationManager
-    @StateObject private var viewModel = StoryViewModel()
+    @EnvironmentObject var viewModel: StoryViewModel
     
     var body: some View {
         GeometryReader { geometry in

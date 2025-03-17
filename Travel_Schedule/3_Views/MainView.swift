@@ -12,6 +12,7 @@ struct MainView: View {
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var routeViewModel: RouteViewModel
     @EnvironmentObject var mainViewModel: MainViewModel
+    @EnvironmentObject var storyViewModel: StoryViewModel
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     private let serviceManager = ServiceManager.shared
     
@@ -23,11 +24,25 @@ struct MainView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
                             ForEach(Story.allStories.indices, id: \.self) { index in
-                                StoriesSmallView(story: Story.allStories[index])
+                                if storyViewModel.isStoryViewed(index) {
+                                    StoriesSmallViewedView(
+                                        story: Story.allStories[index],
+                                        isViewed: true
+                                    )
                                     .padding(.horizontal, 6)
-                            }
-                            .onTapGesture {
-                                navigationManager.path.append(AppScreen.storiesLargeView)
+                                    .onTapGesture {
+                                        navigationManager.path.append(AppScreen.storiesLargeView)
+                                    }
+                                } else {
+                                    StoriesSmallView(
+                                        story: Story.allStories[index],
+                                        isViewed: false
+                                    )
+                                    .padding(.horizontal, 6)
+                                    .onTapGesture {
+                                        navigationManager.path.append(AppScreen.storiesLargeView)
+                                    }
+                                }
                             }
                         }
                         .padding(.vertical, 10)

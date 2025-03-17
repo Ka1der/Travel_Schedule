@@ -12,6 +12,7 @@ class StoryViewModel: ObservableObject {
     @Published var currentStory: Story
     @Published var currentStoryIndex: Int = 0
     @Published var progress: CGFloat = 0
+    @Published var viewedStories: Set<Int> = []
     
     private let stories: [Story]
     private let timerInterval: TimeInterval = 0.05
@@ -21,6 +22,10 @@ class StoryViewModel: ObservableObject {
     init(stories: [Story] = Story.allStories) {
         self.stories = stories
         self.currentStory = stories[0]
+    }
+    
+    func isStoryViewed(_ index: Int) -> Bool {
+        return viewedStories.contains(index)
     }
     
     func startTimer() {
@@ -48,6 +53,7 @@ class StoryViewModel: ObservableObject {
     }
     
     func nextStory() {
+        viewedStories.insert(currentStoryIndex)
         currentStoryIndex = (currentStoryIndex + 1) % stories.count
         currentStory = stories[currentStoryIndex]
     }
