@@ -12,6 +12,7 @@ import NavigationKit
 struct StoriesLargeView: View {
     
     let story: Story
+    let initialIndex: Int
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var viewModel: StoryViewModel
     
@@ -74,6 +75,8 @@ struct StoriesLargeView: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onAppear {
+            viewModel.currentStoryIndex = initialIndex
+            viewModel.currentStory = Story.allStories[initialIndex]
             viewModel.startTimer()
         }
         .onDisappear {
@@ -88,6 +91,7 @@ struct StoriesLargeView: View {
 }
 
 #Preview {
-    StoriesLargeView(story: Story.allStories[0])
+    StoriesLargeView(story: Story.allStories[0], initialIndex: 0)
         .environmentObject(NavigationKit.createNavigationManager())
+        .environmentObject(StoryViewModel())
 }

@@ -31,7 +31,7 @@ struct MainView: View {
                                     )
                                     .padding(.horizontal, 6)
                                     .onTapGesture {
-                                        navigationManager.path.append(AppScreen.storiesLargeView)
+                                        navigationManager.path.append(AppScreen.storiesLargeView(index: index))
                                     }
                                 } else {
                                     StoriesSmallView(
@@ -40,7 +40,7 @@ struct MainView: View {
                                     )
                                     .padding(.horizontal, 6)
                                     .onTapGesture {
-                                        navigationManager.path.append(AppScreen.storiesLargeView)
+                                        navigationManager.path.append(AppScreen.storiesLargeView(index: index))
                                     }
                                 }
                             }

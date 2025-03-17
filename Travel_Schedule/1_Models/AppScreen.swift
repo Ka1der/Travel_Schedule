@@ -16,7 +16,7 @@ enum AppScreen: Screen, Hashable {
     case carrierList
     case carrierInfo(carrier: CarrierModel)
     case filters
-    case storiesLargeView
+    case storiesLargeView(index: Int)
     
     var body: some View {
         switch self {
@@ -42,8 +42,8 @@ enum AppScreen: Screen, Hashable {
             CarrierInfoView(carrier: carrier)
         case .filters:
             FiltersView()
-        case .storiesLargeView:
-            StoriesLargeView(story: Story.allStories[0])
+        case .storiesLargeView(let index):
+            StoriesLargeView(story: Story.allStories[index], initialIndex: index)
         }
     }
 }
