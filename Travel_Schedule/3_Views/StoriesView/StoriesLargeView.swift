@@ -91,6 +91,18 @@ struct StoriesLargeView: View {
             }
             viewModel.restartTimer()
         }
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    if value.translation.width > 50 {
+                        viewModel.previousStory()
+                        viewModel.restartTimer()
+                    } else if value.translation.width < -50 {
+                        viewModel.nextStory()
+                        viewModel.restartTimer()
+                    }
+                }
+        )
         .navigationBarBackButtonHidden(true)
     }
 }
