@@ -57,4 +57,13 @@ class StoryViewModel: ObservableObject {
         currentStoryIndex = (currentStoryIndex + 1) % stories.count
         currentStory = stories[currentStoryIndex]
     }
+    
+    func previousStory() {
+        if currentStoryIndex > 0 {
+            currentStoryIndex -= 1
+        } else {
+            currentStoryIndex = stories.count - 1
+        }
+        currentStory = stories[currentStoryIndex]
+    }
 }

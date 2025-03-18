@@ -82,8 +82,13 @@ struct StoriesLargeView: View {
         .onDisappear {
             viewModel.stopTimer()
         }
-        .onTapGesture {
-            viewModel.nextStory()
+        .onTapGesture { location in
+            let width = UIScreen.main.bounds.width
+            if location.x < width / 2 {
+                viewModel.previousStory()
+            } else {
+                viewModel.nextStory()
+            }
             viewModel.restartTimer()
         }
         .navigationBarBackButtonHidden(true)
