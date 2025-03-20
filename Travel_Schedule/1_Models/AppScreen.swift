@@ -43,7 +43,7 @@ enum AppScreen: Screen, Hashable {
         case .filters:
             FiltersView()
         case .storiesLargeView(let index):
-            StoriesLargeView(story: Story.allStories[index], initialIndex: index)
+            StoriesLargeView(story: stories[index], initialIndex: index)
         }
     }
 }

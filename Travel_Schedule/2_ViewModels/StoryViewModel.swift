@@ -8,20 +8,20 @@
 import SwiftUI
 import Combine
 
-class StoryViewModel: ObservableObject {
-    @Published var currentStory: Story
+final class StoryViewModel: ObservableObject {
+    @Published var currentStory: StoryModel
     @Published var currentStoryIndex: Int = 0
     @Published var progress: CGFloat = 0
     @Published var viewedStories: Set<Int> = []
     
-    private let stories: [Story]
+    private let stories: [StoryModel]
     private let timerInterval: TimeInterval = 0.05
     private var timer: AnyCancellable?
     private let storyDuration: TimeInterval = 5
     
-    init(stories: [Story] = Story.allStories) {
-        self.stories = stories
-        self.currentStory = stories[0]
+    init(stories: [StoryModel] = []) {
+        self.stories = stories.isEmpty ? StoryMock.allStories : stories
+        self.currentStory = self.stories[0]
     }
     
     func isStoryViewed(_ index: Int) -> Bool {

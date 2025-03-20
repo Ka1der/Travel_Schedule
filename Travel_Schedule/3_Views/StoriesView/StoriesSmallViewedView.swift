@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct StoriesSmallViewedView: View {
-    let story: Story
+    let story: StoryModel
     let isViewed: Bool
     
     var body: some View {
         
-        ZStack{
+        ZStack {
             Image(story.backgroundImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
@@ -37,5 +37,5 @@ struct StoriesSmallViewedView: View {
 }
 
 #Preview {
-    StoriesSmallViewedView(story: Story.allStories[0], isViewed: false)
+    StoriesSmallViewedView(story: stories[0], isViewed: false)
 }

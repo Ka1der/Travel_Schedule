@@ -23,10 +23,10 @@ struct MainView: View {
                 GeometryReader { geometry in
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(Story.allStories.indices, id: \.self) { index in
+                            ForEach(stories.indices, id: \.self) { index in
                                 if storyViewModel.isStoryViewed(index) {
                                     StoriesSmallViewedView(
-                                        story: Story.allStories[index],
+                                        story: stories[index],
                                         isViewed: true
                                     )
                                     .padding(.horizontal, 6)
@@ -35,7 +35,7 @@ struct MainView: View {
                                     }
                                 } else {
                                     StoriesSmallView(
-                                        story: Story.allStories[index],
+                                        story: stories[index],
                                         isViewed: false
                                     )
                                     .padding(.horizontal, 6)

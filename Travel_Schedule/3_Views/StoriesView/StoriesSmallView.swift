@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct StoriesSmallView: View {
-    let story: Story
+    let story: StoryModel
     let isViewed: Bool
     
     var body: some View {
@@ -40,5 +40,5 @@ struct StoriesSmallView: View {
 }
 
 #Preview {
-    StoriesSmallView(story: Story.allStories[0], isViewed: false)
+    StoriesSmallView(story: stories[0], isViewed: false)
 }
