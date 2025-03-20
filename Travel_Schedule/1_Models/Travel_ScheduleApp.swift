@@ -13,6 +13,7 @@ struct Travel_ScheduleApp: App {
     @StateObject private var routeViewModel = RouteViewModel()
     @StateObject private var mainViewModel = MainViewModel()
     @StateObject private var navigationManager = NavigationKit.createNavigationManager()
+    @StateObject private var storyViewModel = StoryViewModel()
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some Scene {
@@ -21,6 +22,7 @@ struct Travel_ScheduleApp: App {
                 .environmentObject(routeViewModel)
                 .environmentObject(mainViewModel)
                 .withNavigationManager(navigationManager)
+                .environmentObject(storyViewModel)
                 .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
         }
     }

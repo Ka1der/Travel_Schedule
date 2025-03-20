@@ -1,5 +1,5 @@
 //
-//  StoriesView.swift
+//  StoriesSmallView.swift
 //  Travel_Schedule
 //
 //  Created by Kaider on 23.02.2025.
@@ -7,19 +7,25 @@
 
 import SwiftUI
 
-struct StoriesView: View {
+struct StoriesSmallView: View {
+    let story: StoryModel
+    let isViewed: Bool
+    
     var body: some View {
    
             ZStack{
-                Image("StoriesTestPicture")
+                Image(story.backgroundImage)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 92, height: 140)
                     .cornerRadius(16)
                     .clipped()
+                    .saturation(isViewed ? 0.5 : 1)
                 VStack {
                     Spacer()
-                    Text("Test Text")
+                    Text(story.title)
+                        .font(.caption)
+                        .lineLimit(1)
                         .foregroundStyle(.white)
                         .padding(.bottom, 8)
                 }
@@ -34,5 +40,5 @@ struct StoriesView: View {
 }
 
 #Preview {
-    StoriesView()
+    StoriesSmallView(story: stories[0], isViewed: false)
 }
