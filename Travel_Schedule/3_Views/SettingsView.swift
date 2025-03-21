@@ -9,15 +9,15 @@ import SwiftUI
 import NavigationKit
 
 struct SettingsView: View {
+    @StateObject private var viewModel = SettingsViewModel()
     @EnvironmentObject var navigationManager: NavigationManager
-    @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some View {
         NavigationView {
             ZStack {
                 List {
                     Section {
-                        Toggle(isOn: $isDarkModeEnabled) {
+                        Toggle(isOn: $viewModel.isDarkModeEnabled) {
                             Text("Тёмная тема")
                         }
                         .tint(.blue)
@@ -34,8 +34,7 @@ struct SettingsView: View {
                         .padding(.top)
                         .contentShape(Rectangle())
                         .onTapGesture {
-                            
-                            navigationManager.navigate(to: AppScreen.userAgreementView)
+                            viewModel.navigateToUserAgreement(navigationManager: navigationManager)
                         }
                         .listRowSeparator(.hidden)
                         .listRowBackground(Color.clear)
@@ -51,12 +50,12 @@ struct SettingsView: View {
                     Spacer()
                     
                     VStack {
-                        Text("Приложение использует API \"Яндекс.Расписания\"")
+                        Text(viewModel.apiInfo)
                             .font(.system(size: 12))
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
                         
-                        Text("Версия приложения 1.0 (beta)")
+                        Text("Версия приложения \(viewModel.appVersion)")
                             .font(.system(size: 12))
                             .foregroundColor(.secondary)
                             .padding(.top, 8)
@@ -65,7 +64,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
+        .preferredColorScheme(viewModel.isDarkModeEnabled ? .dark : .light)
     }
 }
 
