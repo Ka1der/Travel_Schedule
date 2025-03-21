@@ -6,19 +6,12 @@
 //
 
 import SwiftUI
+import NavigationKit
 
 struct FiltersView: View {
-    @State private var selectedTimes: Set<String> = []
-    @State private var showTransfers: Bool? = nil
+    @StateObject private var viewModel = FiltersViewModel()
     @Environment(\.presentationMode) var presentationMode
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
-    
-    private let timePeriods = [
-        "Утро 06:00 - 12:00",
-        "День 12:00 - 18:00",
-        "Вечер 18:00 - 00:00",
-        "Ночь 00:00 - 06:00"
-    ]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 30) {
@@ -27,17 +20,13 @@ struct FiltersView: View {
                     .font(.system(size: 24, weight: .bold))
                     .padding(.top, 16)
                 
-                ForEach(timePeriods, id: \.self) { period in
+                ForEach(viewModel.timePeriods, id: \.self) { period in
                     HStack {
                         Text(period)
                             .font(.system(size: 17))
                         Spacer()
-                        CheckBox(isChecked: selectedTimes.contains(period)) {
-                            if selectedTimes.contains(period) {
-                                selectedTimes.remove(period)
-                            } else {
-                                selectedTimes.insert(period)
-                            }
+                        CheckBox(isChecked: viewModel.selectedTimes.contains(period)) {
+                            viewModel.toggleTimeSelection(for: period)
                         }
                     }
                 }
@@ -48,12 +37,12 @@ struct FiltersView: View {
                     .lineLimit(2)
                 
                 VStack(spacing: 30){
-                    RadioButton(text: "Да", isSelected: showTransfers == true) {
-                        showTransfers = true
+                    RadioButton(text: "Да", isSelected: viewModel.showTransfers == true) {
+                        viewModel.setShowTransfers(value: true)
                     }
                     
-                    RadioButton(text: "Нет", isSelected: showTransfers == false) {
-                        showTransfers = false
+                    RadioButton(text: "Нет", isSelected: viewModel.showTransfers == false) {
+                        viewModel.setShowTransfers(value: false)
                     }
                 }
                 .padding(.top, 16)
@@ -62,9 +51,10 @@ struct FiltersView: View {
             Spacer()
             
             VStack {
-                if !selectedTimes.isEmpty && showTransfers != nil {
+                if viewModel.canApplyFilters {
                     Button(action: {
-                        // TO-DO: переход на отфильтрованный экран
+                        viewModel.applyFilters()
+                        presentationMode.wrappedValue.dismiss()
                     }) {
                         Text("Применить")
                             .font(.system(size: 17, weight: .bold))
@@ -93,6 +83,7 @@ struct FiltersView: View {
             }
         )
         .navigationBarTitleDisplayMode(.inline)
+        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }
 
