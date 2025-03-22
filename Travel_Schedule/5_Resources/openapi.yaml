@@ -393,11 +393,17 @@ components:
           items:
             type: object
             properties:
+              title:
+                type: string
+                description: Название страны
               regions:
                 type: array
                 items:
                   type: object
                   properties:
+                    title:
+                      type: string
+                      description: Название региона
                     settlements:
                       type: array
                       items:
@@ -405,6 +411,7 @@ components:
                         properties:
                           title:
                             type: string
+                            description: Название населенного пункта
                           stations:
                             type: array
                             items:

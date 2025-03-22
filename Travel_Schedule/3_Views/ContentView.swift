@@ -11,9 +11,13 @@ import NavigationKit
 struct ContentView: View {
     @EnvironmentObject var navigationManager: NavigationManager
     @EnvironmentObject var routeViewModel: RouteViewModel
+    private let serviceManager = ServiceManager.shared
     
     var body: some View {
         MainView()
+            .task {
+                ServiceManager.shared.requestStationsList()
+            }
     }
 }
 

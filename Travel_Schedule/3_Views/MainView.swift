@@ -81,22 +81,11 @@ struct MainView: View {
                 }
         }
         .tint(isDarkModeEnabled ? .white : .black)
-        .task {
-            await serviceManager.requestNearestSettlementForAllCities()
-            //                                serviceManager.requestNearestStationsForAllCities()
-            //                                serviceManager.requestThread() // проверить
-            //                                serviceManager.requestStationsList()
-            //                                serviceManager.requestSearch()
-            //                                serviceManager.requestShedule()
-            //                                serviceManager.requestCarrier() // проверить
-            //                                serviceManager.requestCopyright() // проверить
-        }
     }
 }
 
 #Preview {
     MainView()
-    
         .environmentObject(RouteViewModel())
         .environmentObject(MainViewModel())
         .environmentObject(NavigationKit.createNavigationManager())

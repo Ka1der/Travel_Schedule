@@ -9,24 +9,29 @@ import Foundation
 import SwiftUI
 import Combine
 
-private var mockCities = [
-    "Москва",
-      "Санкт-Петербург",
-      "Краснодар",
-      "Екатеринбург",
-      "Новосибирск"
-]
-
-private var defaultCities = [
-    "Москва",
-      "Санкт-Петербург",
-      "Краснодар",
-      "Екатеринбург",
-      "Новосибирск"
-]
+class CitiesStorage {
+    static let shared = CitiesStorage()
+    
+    private(set) var cities: [String] = [
+        "Москва",
+        "Санкт-Петербург",
+        "Краснодар",
+        "Екатеринбург",
+        "Новосибирск"
+    ]
+    
+    let citiesPublisher = PassthroughSubject<[String], Never>()
+    
+    private init() {}
+    
+    func updateCities(_ newCities: [String]) {
+        cities = newCities
+        citiesPublisher.send(newCities)
+    }
+}
 
 class CitySelectionViewModel: ObservableObject {
-    @Published var cities: [String] = defaultCities
+    @Published var cities: [String] = []
     @Published var filteredCities: [String] = []
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
@@ -35,7 +40,17 @@ class CitySelectionViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     init() {
+        self.cities = CitiesStorage.shared.cities
         self.filteredCities = cities
+        
+        CitiesStorage.shared.citiesPublisher
+            .receive(on: RunLoop.main)
+            .sink { [weak self] newCities in
+                guard let self = self else { return }
+                self.cities = newCities
+                self.filterCities(with: self.searchText)
+            }
+            .store(in: &cancellables)
         
         $searchText
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)

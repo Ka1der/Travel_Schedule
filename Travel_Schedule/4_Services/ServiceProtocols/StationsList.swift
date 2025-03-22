@@ -39,15 +39,18 @@ final class StationsListService: StationsListServiceProtocol {
         
         guard let httpResponse = response as? HTTPURLResponse,
               httpResponse.statusCode == 200 else {
-            throw NSError(domain: "HTTPError", code: -1, userInfo: nil)
+            throw NSError(domain: "HTTPError", code: (response as? HTTPURLResponse)?.statusCode ?? -1,
+                          userInfo: [NSLocalizedDescriptionKey: "HTTP error with status: \((response as? HTTPURLResponse)?.statusCode ?? -1)"])
         }
-        
-        guard httpResponse.mimeType == "application/json" else {
-            let body = String(data: data, encoding: .utf8) ?? "Unable to decode response body"
-            print("Unexpected content type. Response body: \(body)")
-            throw NSError(domain: "ClientError", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unexpected content type"])
+    
+        do {
+            let decoder = JSONDecoder()
+            return try decoder.decode(StationsList.self, from: data)
+        } catch {
+            let bodyPreview = String(data: data.prefix(100), encoding: .utf8) ?? "Unable to decode response"
+            throw NSError(domain: "ClientError",
+                          code: -1,
+                          userInfo: [NSLocalizedDescriptionKey: "JSON decoding failed: \(error.localizedDescription). Response preview: \(bodyPreview)..."])
         }
-        
-        return try JSONDecoder().decode(StationsList.self, from: data)
     }
 }

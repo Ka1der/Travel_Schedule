@@ -18,7 +18,6 @@ struct CarrierModel: Identifiable, Hashable {
         self.logo = Image(logo)
     }
 
-    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(name)

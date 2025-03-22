@@ -7,7 +7,7 @@
 
 import Foundation
 import OpenAPIURLSession
-import OpenAPIURLSession
+import Combine
 
 final class ServiceManager {
     
@@ -113,7 +113,8 @@ final class ServiceManager {
                     let stations = try await service.getStationsList(
                         apikey: Config.apiKey
                     )
-                    print(stations)
+//                    print(stations)
+                    StationFilters.shared.processApiResponse(stations)
                 } catch {
                     print("Failed to fetch station list: \(error)")
                 }
