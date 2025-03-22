@@ -18,6 +18,7 @@ final class RouteViewModel: ObservableObject {
     @Published var toPoint = RoutePoint(type: .to)
     @Published var selectionState: SelectionState = .from
     @Published var canSearch: Bool = false
+    @Published var selectedCity: String = ""
     
     private var cancellables = Set<AnyCancellable>()
     

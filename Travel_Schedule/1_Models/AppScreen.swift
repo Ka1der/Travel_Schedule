@@ -7,6 +7,7 @@
 
 import SwiftUI
 import NavigationKit
+import Combine
 
 enum AppScreen: Screen, Hashable {
     case main
@@ -18,6 +19,7 @@ enum AppScreen: Screen, Hashable {
     case filters
     case storiesLargeView(index: Int)
     
+    @ViewBuilder
     var body: some View {
         switch self {
         case .main:
@@ -28,12 +30,12 @@ enum AppScreen: Screen, Hashable {
                 isSelectingFromCity: isSelectingFromCity
             )
         case .choosingStation(let isSelectingFromCity):
-            ChoosingStationsView(
-                viewModel: StationSelectionViewModel(
-                    city: isSelectingFromCity ? "Город отправления" : "Город прибытия"
-                ),
-                isSelectingFromCity: isSelectingFromCity
-            )
+            CityStateContainer(isSelectingFromCity: isSelectingFromCity) { selectedCity in
+                ChoosingStationsView(
+                    viewModel: StationSelectionViewModel(city: selectedCity),
+                    isSelectingFromCity: isSelectingFromCity
+                )
+            }
         case .userAgreementView:
             UserAgreementView()
         case .carrierList:
@@ -45,5 +47,19 @@ enum AppScreen: Screen, Hashable {
         case .storiesLargeView(let index):
             StoriesLargeView(story: stories[index], initialIndex: index)
         }
+    }
+}
+
+private struct CityStateContainer<Content: View>: View {
+    @EnvironmentObject var routeViewModel: RouteViewModel
+    let isSelectingFromCity: Bool
+    let content: (String) -> Content
+    
+    var body: some View {
+        let selectedCity = isSelectingFromCity ?
+            routeViewModel.fromPoint.city ?? "Выберите город" :
+            routeViewModel.toPoint.city ?? "Выберите город"
+        
+        content(selectedCity)
     }
 }

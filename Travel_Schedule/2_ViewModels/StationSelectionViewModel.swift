@@ -12,21 +12,22 @@ import Combine
 class StationsStorage {
     static let shared = StationsStorage()
     
-    private(set) var stations: [String] = [
-        "Ленинградский вокзал",
-        "Казанский вокзал",
-        "Ярославский вокзал",
-        "Курский вокзал",
-        "Киевский вокзал"
-    ]
+    private(set) var stations: [String] = []
+    private(set) var cityStations: [String] = []
     
     let stationsPublisher = PassthroughSubject<[String], Never>()
+    let cityStationsPublisher = PassthroughSubject<[String], Never>()
     
     private init() {}
     
     func updateStations(_ newStations: [String]) {
         stations = newStations
         stationsPublisher.send(newStations)
+    }
+    
+    func updateStationsForCity(_ newStations: [String]) {
+        cityStations = newStations
+        cityStationsPublisher.send(newStations)
     }
 }
 
@@ -44,16 +45,18 @@ class StationSelectionViewModel: ObservableObject {
     var onStationSelected: ((String) -> Void)?
     
     init(city: String) {
-        self.selectedCity = city
-        self.stations = StationsStorage.shared.stations
-        self.filteredStations = self.stations
         
-        StationsStorage.shared.stationsPublisher
+        self.selectedCity = city
+
+        StationFilters.shared.setSelectedCity(city)
+        
+        StationFilters.shared.selectedCityStationsPublisher
             .receive(on: RunLoop.main)
-            .sink { [weak self] newStations in
+            .sink { [weak self] cityStations in
                 guard let self = self else { return }
-                self.stations = newStations
+                self.stations = cityStations
                 self.filterStations(with: self.searchText)
+                print("Получены станции для города \"\(self.selectedCity)\": \(cityStations.count)")
             }
             .store(in: &cancellables)
         
@@ -64,6 +67,9 @@ class StationSelectionViewModel: ObservableObject {
                 self?.filterStations(with: text)
             }
             .store(in: &cancellables)
+        
+        self.stations = StationsStorage.shared.cityStations
+        self.filteredStations = self.stations
     }
     
     func selectStation(_ station: String) {

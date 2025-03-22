@@ -10,7 +10,12 @@ import Combine
 
 final class StationFilters {
     private var cancellables = Set<AnyCancellable>()
+    private var cityToStationsMap: [String: [String]] = [:]
     static let shared = StationFilters()
+    
+    // Добавляем Publisher для станций выбранного города
+    let selectedCityStationsPublisher = PassthroughSubject<[String], Never>()
+    private var selectedCity: String? = nil
     
     private init() {}
     
@@ -72,8 +77,56 @@ final class StationFilters {
         print("Станции России: \(uniqueStations.count)")
     }
     
+    func setSelectedCity(_ city: String) {
+        guard selectedCity != city else { return }
+        
+        selectedCity = city
+        let stations = getStationsForCity(city: city)
+        selectedCityStationsPublisher.send(stations)
+        StationsStorage.shared.updateStationsForCity(stations)
+        print("Выбран город: \"\(city)\", число станций: \(stations.count)")
+    }
+    
+    func getSelectedCity() -> String? {
+        return selectedCity
+    }
+    
+    func getStationsForCity(city: String) -> [String] {
+        let stations = cityToStationsMap[city] ?? []
+        return Array(Set(stations)).sorted()
+    }
+    
+    private func createCityToStationsMap(from response: Components.Schemas.StationsList) {
+        cityToStationsMap.removeAll()
+        
+        if let countries = response.countries {
+            for country in countries where country.title == "Россия" {
+                if let regions = country.regions {
+                    for region in regions {
+                        if let settlements = region.settlements {
+                            for settlement in settlements {
+                                if let title = settlement.title, let stationsList = settlement.stations {
+                                    var stationsForCity: [String] = []
+                                    
+                                    for station in stationsList {
+                                        if let stationTitle = station.title {
+                                            stationsForCity.append(stationTitle)
+                                        }
+                                    }
+                                    
+                                    cityToStationsMap[title] = stationsForCity
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     func processApiResponse(_ response: Components.Schemas.StationsList) {
         filterRussianCities(from: response)
         filterRussianStations(from: response)
+        createCityToStationsMap(from: response)
     }
 }
