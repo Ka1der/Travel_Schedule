@@ -50,40 +50,41 @@ struct ChoosingStationsView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             
-            List(viewModel.filteredStations, id: \.self) { station in
-                          HStack {
-                              Text(station)
-                                  .font(.system(size: 17))
-                              
-                              Spacer()
-                              
-                              Image(systemName: "chevron.right")
-                                  .foregroundColor(isDarkModeEnabled ? .white : .black)
-                          }
-                          .padding(.vertical, 8)
-                          .contentShape(Rectangle())
-                          .onTapGesture {
-                              routeViewModel.selectStation(station, for: selectionState)
-                              navigationManager.path.removeLast(navigationManager.path.count)
-                          }
-                          .listRowSeparator(.hidden)
-                      }
-                      .listStyle(PlainListStyle())
-                  }
-        .navigationTitle("Выбор станции")
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    navigationManager.path.removeLast()
-                }) {
-                    HStack(spacing: 2) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(isDarkModeEnabled ? .white : .black)
+            List(viewModel.filteredStations, id: \.code) { station in
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(station.title)
+                            .font(.system(size: 17))
+                    }
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
+                }
+                .padding(.vertical, 8)
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    routeViewModel.selectStation(station, for: selectionState)
+                    navigationManager.path.removeLast(navigationManager.path.count)
+                }
+                .listRowSeparator(.hidden)
+            }
+            .navigationTitle("Выбор станции")
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: {
+                        navigationManager.path.removeLast()
+                    }) {
+                        HStack(spacing: 2) {
+                            Image(systemName: "chevron.left")
+                                .foregroundColor(isDarkModeEnabled ? .white : .black)
+                        }
                     }
                 }
             }
+            .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
         }
-        .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
     }
 }

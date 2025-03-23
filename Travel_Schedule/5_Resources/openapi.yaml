@@ -339,6 +339,21 @@ components:
           type: string
         popular_title:
           type: string
+        codes:
+          type: object
+          properties:
+            yandex_code:
+              type: string
+            esr:
+              type: string
+            iata:
+              type: string
+            icao:
+              type: string
+            sirena:
+              type: string
+            express:
+              type: string
         type:
           type: string
         type_choices:

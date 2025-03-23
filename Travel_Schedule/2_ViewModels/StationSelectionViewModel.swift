@@ -12,42 +12,40 @@ import Combine
 class StationsStorage {
     static let shared = StationsStorage()
     
-    private(set) var stations: [String] = []
-    private(set) var cityStations: [String] = []
+    private(set) var stations: [(title: String, code: String)] = []
+    private(set) var cityStations: [(title: String, code: String)] = []
     
-    let stationsPublisher = PassthroughSubject<[String], Never>()
-    let cityStationsPublisher = PassthroughSubject<[String], Never>()
+    let stationsPublisher = PassthroughSubject<[(title: String, code: String)], Never>()
+    let cityStationsPublisher = PassthroughSubject<[(title: String, code: String)], Never>()
     
     private init() {}
     
-    func updateStations(_ newStations: [String]) {
+    func updateStations(_ newStations: [(title: String, code: String)]) {
         stations = newStations
         stationsPublisher.send(newStations)
     }
     
-    func updateStationsForCity(_ newStations: [String]) {
+    func updateStationsForCity(_ newStations: [(title: String, code: String)]) {
         cityStations = newStations
         cityStationsPublisher.send(newStations)
     }
 }
 
 class StationSelectionViewModel: ObservableObject {
-    @Published var stations: [String] = []
-    @Published var filteredStations: [String] = []
+    @Published var stations: [(title: String, code: String)] = []
+    @Published var filteredStations: [(title: String, code: String)] = []
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     @Published var selectedCity: String = ""
-    @Published var selectedStation: String? = nil
+    @Published var selectedStation: (title: String, code: String)? = nil
     
     private var cancellables = Set<AnyCancellable>()
     
-    var onStationSelected: ((String) -> Void)?
+    var onStationSelected: (((title: String, code: String)) -> Void)?
     
     init(city: String) {
-        
         self.selectedCity = city
-
         StationFilters.shared.setSelectedCity(city)
         
         StationFilters.shared.selectedCityStationsPublisher
@@ -72,8 +70,9 @@ class StationSelectionViewModel: ObservableObject {
         self.filteredStations = self.stations
     }
     
-    func selectStation(_ station: String) {
+    func selectStation(_ station: (title: String, code: String)) {
         selectedStation = station
+        print("StationSelectionViewModel: выбрана станция \"\(station.title)\" с кодом \"\(station.code)\"")
         onStationSelected?(station)
     }
     
@@ -81,7 +80,7 @@ class StationSelectionViewModel: ObservableObject {
         if query.isEmpty {
             filteredStations = stations
         } else {
-            filteredStations = stations.filter { $0.lowercased().contains(query.lowercased()) }
+            filteredStations = stations.filter { $0.title.lowercased().contains(query.lowercased()) }
         }
     }
 }

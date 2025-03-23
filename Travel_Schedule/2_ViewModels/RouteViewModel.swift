@@ -48,16 +48,24 @@ final class RouteViewModel: ObservableObject {
         }
     }
     
-    func selectStation(_ station: String, for state: SelectionState) {
+    func selectStation(_ station: (title: String, code: String), for state: SelectionState) {
+        print("Выбрана станция \(station.title) (код: \(station.code)) для \(state)")
         switch state {
         case .from:
-            fromPoint.station = station
+            fromPoint.station = station.title
+            fromPoint.code = station.code
         case .to:
-            toPoint.station = station
+            toPoint.station = station.title
+            toPoint.code = station.code
         }
+
     }
     
     func searchRoutes() {
-        // Будущая реализация поиска маршрутов
+        guard canSearch else { return }
+        print("Поиск маршрутов от \(fromPoint.city) (\(fromPoint.station)) до \(toPoint.city) (\(toPoint.station))")
+        print("Коды станций: \(fromPoint.code) -> \(toPoint.code)")
+        
+        // реализация поиска маршрутов
     }
 }

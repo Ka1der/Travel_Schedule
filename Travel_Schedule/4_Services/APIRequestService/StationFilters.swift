@@ -10,11 +10,10 @@ import Combine
 
 final class StationFilters {
     private var cancellables = Set<AnyCancellable>()
-    private var cityToStationsMap: [String: [String]] = [:]
+    private var cityToStationsMap: [String: [(title: String, code: String)]] = [:]
     static let shared = StationFilters()
     
-    // Добавляем Publisher для станций выбранного города
-    let selectedCityStationsPublisher = PassthroughSubject<[String], Never>()
+    let selectedCityStationsPublisher = PassthroughSubject<[(title: String, code: String)], Never>()
     private var selectedCity: String? = nil
     
     private init() {}
@@ -46,9 +45,11 @@ final class StationFilters {
         print("\nГорода России: \(uniqueCities.count)")
     }
     
-    // Фильтрация станций России
+    // Фильтрация станций России с корректным получением кода
     func filterRussianStations(from response: Components.Schemas.StationsList) {
-        var stations = [String]()
+        var stations: [(title: String, code: String)] = []
+        var stationsCount = 0
+        var stationsWithoutCodes = 0
         
         if let countries = response.countries {
             for country in countries {
@@ -59,8 +60,14 @@ final class StationFilters {
                                 for settlement in settlements {
                                     if let stationsList = settlement.stations {
                                         for station in stationsList {
+                                            stationsCount += 1
+                                            
                                             if let title = station.title {
-                                                stations.append(title)
+                                                if let code = station.codes?.yandex_code {
+                                                    stations.append((title: title, code: code))
+                                                } else {
+                                                    stationsWithoutCodes += 1
+                                                }
                                             }
                                         }
                                     }
@@ -72,9 +79,7 @@ final class StationFilters {
             }
         }
         
-        let uniqueStations = Array(Set(stations)).sorted()
-        StationsStorage.shared.updateStations(uniqueStations)
-        print("Станции России: \(uniqueStations.count)")
+        print("Всего станций в России: \(stationsCount)")
     }
     
     func setSelectedCity(_ city: String) {
@@ -91,9 +96,8 @@ final class StationFilters {
         return selectedCity
     }
     
-    func getStationsForCity(city: String) -> [String] {
-        let stations = cityToStationsMap[city] ?? []
-        return Array(Set(stations)).sorted()
+    func getStationsForCity(city: String) -> [(title: String, code: String)] {
+        return cityToStationsMap[city] ?? []
     }
     
     private func createCityToStationsMap(from response: Components.Schemas.StationsList) {
@@ -106,15 +110,17 @@ final class StationFilters {
                         if let settlements = region.settlements {
                             for settlement in settlements {
                                 if let title = settlement.title, let stationsList = settlement.stations {
-                                    var stationsForCity: [String] = []
+                                    var stationsForCity: [(title: String, code: String)] = []
                                     
                                     for station in stationsList {
-                                        if let stationTitle = station.title {
-                                            stationsForCity.append(stationTitle)
+                                        if let stationTitle = station.title, let code = station.codes?.yandex_code {
+                                            stationsForCity.append((title: stationTitle, code: code))
                                         }
                                     }
                                     
-                                    cityToStationsMap[title] = stationsForCity
+                                    if !stationsForCity.isEmpty {
+                                        cityToStationsMap[title] = stationsForCity
+                                    }
                                 }
                             }
                         }

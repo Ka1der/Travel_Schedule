@@ -22,6 +22,7 @@ struct RoutePoint {
     var city: String = ""
     var station: String = ""
     let type: PointType
+    var code: String = ""
     
     var isEmpty: Bool { city.isEmpty }
     
