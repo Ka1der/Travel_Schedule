@@ -54,24 +54,49 @@ final class RouteViewModel: ObservableObject {
         }
     }
     
-    func selectStation(_ station: (title: String, code: String), for state: SelectionState) {
-        print("Выбрана станция \(station.title) (код: \(station.code)) для \(state)")
+    func selectStation(_ station: (
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    ), for state: SelectionState) {
+        print("""
+            Выбрана станция:
+            - Название: \(station.title)
+            - Код: \(station.code)
+            - Тип станции: \(station.stationType)
+            - Тип транспорта: \(station.transportType)
+            Для: \(state)
+            """)
+        
         switch state {
         case .from:
             fromPoint.station = station.title
             fromPoint.code = station.code
+            fromPoint.stationType = station.stationType
+            fromPoint.transportType = station.transportType
             fromStationCode = station.code
         case .to:
             toPoint.station = station.title
             toPoint.code = station.code
+            toPoint.stationType = station.stationType
+            toPoint.transportType = station.transportType
             toStationCode = station.code
         }
     }
     
     func searchRoutes() {
         guard canSearch else { return }
-        print("Поиск маршрутов от \(fromPoint.city) (\(fromPoint.station)) до \(toPoint.city) (\(toPoint.station))")
-        print("Коды станций: \(fromPoint.code) -> \(toPoint.code)")
+        print("""
+            Поиск маршрутов:
+            От: \(fromPoint.city) (\(fromPoint.station))
+            - Тип станции: \(fromPoint.stationType)
+            - Тип транспорта: \(fromPoint.transportType)
+            До: \(toPoint.city) (\(toPoint.station))
+            - Тип станции: \(toPoint.stationType)
+            - Тип транспорта: \(toPoint.transportType)
+            Коды станций: \(fromPoint.code) -> \(toPoint.code)
+            """)
         
         // реализация поиска маршрутов
     }

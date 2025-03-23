@@ -10,10 +10,20 @@ import Combine
 
 final class StationFilters {
     private var cancellables = Set<AnyCancellable>()
-    private var cityToStationsMap: [String: [(title: String, code: String)]] = [:]
+    private var cityToStationsMap: [String: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )]] = [:]
     static let shared = StationFilters()
     
-    let selectedCityStationsPublisher = PassthroughSubject<[(title: String, code: String)], Never>()
+    let selectedCityStationsPublisher = PassthroughSubject<[(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )], Never>()
     private var selectedCity: String? = nil
     
     private init() {}
@@ -47,7 +57,7 @@ final class StationFilters {
     
     // Фильтрация станций России с корректным получением кода
     func filterRussianStations(from response: Components.Schemas.StationsList) {
-        var stations: [(title: String, code: String)] = []
+        var stations: [(title: String, code: String, stationType: String, transportType: String)] = []
         var stationsCount = 0
         var stationsWithoutCodes = 0
         
@@ -64,7 +74,12 @@ final class StationFilters {
                                             
                                             if let title = station.title {
                                                 if let code = station.codes?.yandex_code {
-                                                    stations.append((title: title, code: code))
+                                                    stations.append((
+                                                        title: title,
+                                                        code: code,
+                                                        stationType: station.station_type ?? "Не указан",
+                                                        transportType: station.transport_type ?? "Не указан"
+                                                    ))
                                                 } else {
                                                     stationsWithoutCodes += 1
                                                 }
@@ -96,7 +111,7 @@ final class StationFilters {
         return selectedCity
     }
     
-    func getStationsForCity(city: String) -> [(title: String, code: String)] {
+    func getStationsForCity(city: String) -> [(title: String, code: String, stationType: String, transportType: String)] {
         return cityToStationsMap[city] ?? []
     }
     
@@ -110,11 +125,16 @@ final class StationFilters {
                         if let settlements = region.settlements {
                             for settlement in settlements {
                                 if let title = settlement.title, let stationsList = settlement.stations {
-                                    var stationsForCity: [(title: String, code: String)] = []
+                                    var stationsForCity: [(title: String, code: String, stationType: String, transportType: String)] = []
                                     
                                     for station in stationsList {
                                         if let stationTitle = station.title, let code = station.codes?.yandex_code {
-                                            stationsForCity.append((title: stationTitle, code: code))
+                                            stationsForCity.append((
+                                                title: stationTitle,
+                                                code: code,
+                                                stationType: station.station_type ?? "Не указан",
+                                                transportType: station.transport_type ?? "Не указан"
+                                            ))
                                         }
                                     }
                                     

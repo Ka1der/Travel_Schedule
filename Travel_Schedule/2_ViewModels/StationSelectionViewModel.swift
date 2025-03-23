@@ -12,37 +12,91 @@ import Combine
 class StationsStorage {
     static let shared = StationsStorage()
     
-    private(set) var stations: [(title: String, code: String)] = []
-    private(set) var cityStations: [(title: String, code: String)] = []
+    private(set) var stations: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )] = []
     
-    let stationsPublisher = PassthroughSubject<[(title: String, code: String)], Never>()
-    let cityStationsPublisher = PassthroughSubject<[(title: String, code: String)], Never>()
+    private(set) var cityStations: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )] = []
+    
+    let stationsPublisher = PassthroughSubject<[(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )], Never>()
+    
+    let cityStationsPublisher = PassthroughSubject<[(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )], Never>()
     
     private init() {}
     
-    func updateStations(_ newStations: [(title: String, code: String)]) {
+    func updateStations(_ newStations: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )]) {
         stations = newStations
         stationsPublisher.send(newStations)
     }
     
-    func updateStationsForCity(_ newStations: [(title: String, code: String)]) {
+    func updateStationsForCity(_ newStations: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )]) {
         cityStations = newStations
         cityStationsPublisher.send(newStations)
     }
 }
 
 class StationSelectionViewModel: ObservableObject {
-    @Published var stations: [(title: String, code: String)] = []
-    @Published var filteredStations: [(title: String, code: String)] = []
+    @Published var stations: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )] = []
+    
+    @Published var filteredStations: [(
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )] = []
+    
     @Published var searchText: String = ""
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     @Published var selectedCity: String = ""
-    @Published var selectedStation: (title: String, code: String)? = nil
+    @Published var selectedStation: (
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )? = nil
     
     private var cancellables = Set<AnyCancellable>()
     
-    var onStationSelected: (((title: String, code: String)) -> Void)?
+    var onStationSelected: (((
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )) -> Void)?
     
     init(city: String) {
         self.selectedCity = city
@@ -70,9 +124,20 @@ class StationSelectionViewModel: ObservableObject {
         self.filteredStations = self.stations
     }
     
-    func selectStation(_ station: (title: String, code: String)) {
+    func selectStation(_ station: (
+        title: String,
+        code: String,
+        stationType: String,
+        transportType: String
+    )) {
         selectedStation = station
-        print("StationSelectionViewModel: выбрана станция \"\(station.title)\" с кодом \"\(station.code)\"")
+        print("""
+            StationSelectionViewModel: выбрана станция
+            - Название: \(station.title)
+            - Код: \(station.code)
+            - Тип станции: \(station.stationType)
+            - Тип транспорта: \(station.transportType)
+            """)
         onStationSelected?(station)
     }
     
