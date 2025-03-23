@@ -65,6 +65,7 @@ struct MainView: View {
                                     .foregroundColor(.white)
                                     .cornerRadius(16)
                             }
+                            
                             .transition(.opacity)
                         }
                     }

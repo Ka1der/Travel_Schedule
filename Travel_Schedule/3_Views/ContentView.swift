@@ -15,9 +15,6 @@ struct ContentView: View {
     
     var body: some View {
         MainView()
-            .task {
-                ServiceManager.shared.requestStationsList()
-            }
     }
 }
 

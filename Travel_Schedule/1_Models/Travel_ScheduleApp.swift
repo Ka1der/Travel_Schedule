@@ -24,6 +24,10 @@ struct Travel_ScheduleApp: App {
                 .withNavigationManager(navigationManager)
                 .environmentObject(storyViewModel)
                 .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
+                .task {
+                    ServiceManager.shared.setupSubscriptions(with: routeViewModel)
+                    ServiceManager.shared.requestStationsList()
+                }
         }
     }
 }

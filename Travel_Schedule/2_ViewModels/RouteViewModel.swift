@@ -19,6 +19,12 @@ final class RouteViewModel: ObservableObject {
     @Published var selectionState: SelectionState = .from
     @Published var canSearch: Bool = false
     @Published var selectedCity: String = ""
+    @Published var searchResults: Components.Schemas.Search?
+    @Published var isSearching: Bool = false
+    @Published var searchError: Error?
+    @Published private(set) var fromStationCode: String = ""
+    @Published private(set) var toStationCode: String = ""
+    private let serviceManager = ServiceManager.shared
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -54,11 +60,12 @@ final class RouteViewModel: ObservableObject {
         case .from:
             fromPoint.station = station.title
             fromPoint.code = station.code
+            fromStationCode = station.code
         case .to:
             toPoint.station = station.title
             toPoint.code = station.code
+            toStationCode = station.code
         }
-
     }
     
     func searchRoutes() {
