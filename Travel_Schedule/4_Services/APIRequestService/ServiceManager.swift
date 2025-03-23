@@ -121,7 +121,7 @@ final class ServiceManager {
                     let stations = try await service.getStationsList(
                         apikey: Config.apiKey
                     )
-//                    print(stations)
+                    //                    print(stations)
                     StationFilters.shared.processApiResponse(stations)
                 } catch {
                     print("Failed to fetch station list: \(error)")
@@ -134,58 +134,101 @@ final class ServiceManager {
     
     // MARK: - Search
     
-       func requestSearch(from: String, to: String) {
-           do {
-               let client = try Client(
-                   serverURL: Servers.Server1.url(),
-                   transport: URLSessionTransport()
-               )
-               let service = SearchListService(
-                   client: client,
-                   apikey: Config.apiKey
-               )
-               
-               let dateString = Config.SearchSettings.defaultDate
-               let dateFormatter = DateFormatter()
-               dateFormatter.dateFormat = "yyyy-MM-dd"
-               guard let date = dateFormatter.date(from: dateString) else {
-                   print("Invalid date string")
-                   return
-               }
-               
-               Task {
-                   do {
-                       let stations = try await service.getScheduleBetweenStations(
-                           apikey: Config.apiKey,
-                           from: from,
-                           to: to,
-                           transportTypes: "train",
-                           date: date
-                       )
-                       printSearchResults(stations)
-                   } catch {
-                       print("Ошибка при поиске маршрута: \(error)")
-                   }
-               }
-           } catch {
-               print("Ошибка при создании клиента: \(error)")
-           }
-       }
-
+    func requestSearch(from: String, to: String) {
+        do {
+            let client = try Client(
+                serverURL: Servers.Server1.url(),
+                transport: URLSessionTransport()
+            )
+            let service = SearchListService(
+                client: client,
+                apikey: Config.apiKey
+            )
+            
+            let dateString = Config.SearchSettings.defaultDate
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            guard let date = dateFormatter.date(from: dateString) else {
+                print("Invalid date string")
+                return
+            }
+            
+            Task {
+                do {
+                    let stations = try await service.getScheduleBetweenStations(
+                        apikey: Config.apiKey,
+                        from: from,
+                        to: to,
+                        transportTypes: "train",
+                        date: date
+                    )
+                    printSearchResults(stations)
+                } catch {
+                    print("Ошибка при поиске маршрута: \(error)")
+                }
+            }
+        } catch {
+            print("Ошибка при создании клиента: \(error)")
+        }
+    }
+    
+    private func formatDateObject(_ date: Date?) -> String {
+        guard let date = date else { return "Не указано" }
+        
+        let outputFormatter = DateFormatter()
+        outputFormatter.dateFormat = "dd.MM.yyyy HH:mm"
+        outputFormatter.locale = Locale(identifier: "ru_RU")
+        
+        return outputFormatter.string(from: date)
+    }
+    
     private func printSearchResults(_ stations: Components.Schemas.Search) {
-        print("Расписание рейсов между станциями:")
+        print("\nРасписание рейсов между станциями:")
         
         if let from = stations.search?.from {
-            print("Откуда: \(from.title ?? "Не указано"), Код: \(from.code ?? "Не указан"), Тип транспорта: \(from.transport_type ?? "Не указан")")
+            print("""
+            Откуда: 
+            - Название: \(from.title ?? "Не указано")
+            - Код: \(from.code ?? "Не указан")
+            - Тип транспорта: \(from.transport_type ?? "Не указан")
+            """)
         } else {
             print("Откуда: Информация отсутствует")
         }
         
         if let to = stations.search?.to {
-            print("Куда: \(to.title ?? "Не указано"), Код: \(to.code ?? "Не указан"), Тип транспорта: \(to.transport_type ?? "Не указан")")
+            print("""
+            Куда:
+            - Название: \(to.title ?? "Не указано")
+            - Код: \(to.code ?? "Не указан")
+            - Тип транспорта: \(to.transport_type ?? "Не указан")
+            """)
         } else {
             print("Куда: Информация отсутствует")
         }
+        
+        if let segments = stations.segments {
+            if segments.isEmpty {
+                print("\nРейсы не найдены")
+            } else {
+                print("\nНайденные рейсы:")
+                for (index, segment) in segments.enumerated() {
+                    var threadInfo = """
+                    
+                    Рейс #\(index + 1):
+                    - Номер рейса: \(segment.thread?.number ?? "Не указан")
+                    - Перевозчик: \(segment.thread?.carrier?.title ?? "Не указан")
+                    - Код перевозчика: \(segment.thread?.carrier?.code != nil ? "\(segment.thread!.carrier!.code)" : "Не указан")
+                    - Тип транспорта: \(segment.thread?.transport_type ?? "Не указан")
+                    """
+                    
+                    print(threadInfo)
+                }
+            }
+        } else {
+            print("\nРейсы не найдены")
+        }
+        print("----------------------------------------")
     }
     
     // MARK: - Shedule

@@ -436,7 +436,7 @@ components:
       type: object
       properties:
         code:
-          type: string
+          type: integer
         title:
           type: string
         address:
