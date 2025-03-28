@@ -30,19 +30,48 @@ struct CarrierListView: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 16)
                 
-                List(viewModel.carriers) { carrier in
-                    CarrierView(carrier: carrier)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
+                if viewModel.isLoading {
+                    Spacer()
+                    ProgressView("Загрузка рейсов...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                    Spacer()
+                } else if let errorMessage = viewModel.errorMessage {
+                    Spacer()
+                    VStack {
+                        Text(errorMessage)
+                            .font(.headline)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                    }
+                    Spacer()
+                } else if viewModel.carriers.isEmpty {
+                    Spacer()
+                    Text("Рейсы не найдены")
+                        .font(.headline)
+                    Spacer()
+                } else {
+                    List {
+                        ForEach(viewModel.carriers) { carrier in
+                            CarrierView(carrier: carrier)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
+                                }
+                                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                         }
-                        .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
+                        
+                        Color.clear
+                            .frame(height: 130)
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .background(isDarkModeEnabled ? Color.black : Color.white)
+                    .listStyle(PlainListStyle())
                 }
-                .scrollContentBackground(.hidden)
-                .background(isDarkModeEnabled ? Color.black : Color.white)
-                .listStyle(PlainListStyle())
             }
             
             VStack {
@@ -73,6 +102,19 @@ struct CarrierListView: View {
             }
         }
         .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
+        .onAppear {
+            loadCarrierData()
+        }
+    }
+    
+    private func loadCarrierData() {
+        if !routeViewModel.fromStationCode.isEmpty && !routeViewModel.toStationCode.isEmpty {
+            viewModel.fetchData(
+                from: routeViewModel.fromStationCode,
+                to: routeViewModel.toStationCode,
+                date: Config.SearchSettings.defaultDate
+            )
+        }
     }
 }
 

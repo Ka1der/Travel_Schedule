@@ -283,6 +283,13 @@ paths:
           schema:
             type: string
           description: Типы транспорта (через запятую)
+        - name: transfers
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Разрешить маршруты с пересадками
         - name: format
           in: query
           required: false
@@ -451,6 +458,10 @@ components:
           type: string
         logo:
           type: string
+          description: URL логотипа перевозчика
+        logo_svg:
+          type: string
+          description: URL SVG-логотипа перевозчика
         code_icao:
           type: string
         code_iata:
@@ -636,6 +647,33 @@ components:
           $ref: '#/components/schemas/Station'
         duration:
           type: integer
+        transfers:
+          oneOf:
+            - type: integer
+              description: Количество пересадок
+            - type: array
+              description: Информация о пересадках
+              items:
+                type: object
+                properties:
+                  station:
+                    $ref: '#/components/schemas/Station'
+                additionalProperties: true
+        transfer_points:
+          type: array
+          items:
+            type: object
+            properties:
+              station:
+                $ref: '#/components/schemas/Station'
+              departure:
+                type: string
+                format: date-time
+              arrival:
+                type: string
+                format: date-time
+              duration:
+                type: integer
         start_date:
           type: string
           format: date

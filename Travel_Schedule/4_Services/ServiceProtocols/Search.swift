@@ -17,7 +17,8 @@ protocol SearchServiceProtocol {
         from: String,
         to: String,
         transportTypes: String,
-        date: Date
+        date: Date,
+        transfers: Bool
     ) async throws -> Search
 }
 
@@ -44,7 +45,8 @@ final class SearchListService: SearchServiceProtocol {
         from: String,
         to: String,
         transportTypes: String,
-        date: Date
+        date: Date,
+        transfers: Bool = false
     ) async throws -> Search {
         
         let dateString = dateFormatter.string(from: date)
@@ -52,7 +54,9 @@ final class SearchListService: SearchServiceProtocol {
             apikey: apikey,
             from: from,
             to: to,
-            date: dateString, transport_types: transportTypes
+            date: dateString,
+            transport_types: transportTypes,
+            transfers: transfers  
         ))
         return try response.ok.body.json
     }

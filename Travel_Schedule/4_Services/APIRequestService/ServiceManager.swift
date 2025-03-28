@@ -134,7 +134,7 @@ final class ServiceManager {
     
     // MARK: - Search
     
-    func requestSearch(from: String, to: String) {
+    func requestSearch(from: String, to: String, date: String? = nil, transfers: Bool = false, carrierViewModel: CarrierViewModel? = nil) {
         do {
             let client = try Client(
                 serverURL: Servers.Server1.url(),
@@ -145,10 +145,10 @@ final class ServiceManager {
                 apikey: Config.apiKey
             )
             
-            let dateString = Config.SearchSettings.defaultDate
+            let dateString = date ?? Config.SearchSettings.defaultDate
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
-            guard let date = dateFormatter.date(from: dateString) else {
+            guard let dateObject = dateFormatter.date(from: dateString) else {
                 print("Invalid date string")
                 return
             }
@@ -160,10 +160,20 @@ final class ServiceManager {
                         from: from,
                         to: to,
                         transportTypes: "train",
-                        date: date
+                        date: dateObject,
+                        transfers: transfers
                     )
+                   
+                    if let vm = carrierViewModel {
+                        vm.updateCarriers(from: stations)
+                    }
+                    
                     printSearchResults(stations)
                 } catch {
+                    DispatchQueue.main.async {
+                        carrierViewModel?.isLoading = false
+                        carrierViewModel?.errorMessage = "Ошибка при загрузке данных: \(error.localizedDescription)"
+                    }
                     print("Ошибка при поиске маршрута: \(error)")
                 }
             }
@@ -218,7 +228,7 @@ final class ServiceManager {
                     Рейс #\(index + 1):
                     - Номер рейса: \(segment.thread?.number ?? "Не указан")
                     - Перевозчик: \(segment.thread?.carrier?.title ?? "Не указан")
-                    - Код перевозчика: \(segment.thread?.carrier?.code != nil ? "\(segment.thread!.carrier!.code)" : "Не указан")
+                    - Код перевозчика: \(segment.thread?.carrier?.code.map { String(describing: $0) } ?? "Не указан")
                     - Тип транспорта: \(segment.thread?.transport_type ?? "Не указан")
                     """
                     
