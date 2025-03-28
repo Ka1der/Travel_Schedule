@@ -163,7 +163,7 @@ final class ServiceManager {
                         date: dateObject,
                         transfers: transfers
                     )
-                   
+                    
                     if let vm = carrierViewModel {
                         vm.updateCarriers(from: stations)
                     }
@@ -179,6 +179,10 @@ final class ServiceManager {
             }
         } catch {
             print("Ошибка при создании клиента: \(error)")
+            DispatchQueue.main.async {
+                carrierViewModel?.isLoading = false
+                carrierViewModel?.errorMessage = "Ошибка при создании клиента"
+            }
         }
     }
     

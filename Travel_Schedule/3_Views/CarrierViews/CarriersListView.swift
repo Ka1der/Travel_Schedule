@@ -19,91 +19,116 @@ struct CarrierListView: View {
             (isDarkModeEnabled ? Color.black : Color.white).ignoresSafeArea()
             
             VStack(spacing: 0) {
-                VStack {
-                    Text("\(routeViewModel.fromText) \(Image(systemName: "arrow.right")) \(routeViewModel.toText)")
-                        .fontWeight(.bold)
-                        .font(.system(size: 24))
-                        .foregroundColor(isDarkModeEnabled ? .white : .black)
-                        .background(Color.clear)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
-                
-                if viewModel.isLoading {
-                    Spacer()
-                    ProgressView("Загрузка рейсов...")
-                        .progressViewStyle(CircularProgressViewStyle())
-                    Spacer()
-                } else if let errorMessage = viewModel.errorMessage {
-                    Spacer()
-                    VStack {
-                        Text(errorMessage)
-                            .font(.headline)
-                            .multilineTextAlignment(.center)
-                            .padding()
-                    }
-                    Spacer()
-                } else if viewModel.carriers.isEmpty {
-                    Spacer()
-                    Text("Рейсы не найдены")
-                        .font(.headline)
-                    Spacer()
-                } else {
-                    List {
-                        ForEach(viewModel.carriers) { carrier in
-                            CarrierView(carrier: carrier)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
-                                }
-                                .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
-                                .listRowBackground(Color.clear)
-                                .listRowSeparator(.hidden)
-                        }
-                        
-                        Color.clear
-                            .frame(height: 130)
-                            .listRowBackground(Color.clear)
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
-                    }
-                    .scrollContentBackground(.hidden)
-                    .background(isDarkModeEnabled ? Color.black : Color.white)
-                    .listStyle(PlainListStyle())
-                }
+                routeHeaderView
+                contentView
             }
-            
             VStack {
                 Spacer()
-                Button(action: {
-                    navigationManager.path.append(AppScreen.filters)
-                }) {
-                    Text("Уточнить время")
-                        .frame(width: 343, height: 60)
-                        .fontWeight(.bold)
-                        .font(.system(size: 17))
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(16)
-                }
-                .padding(.bottom, 58)
+                filterButton
             }
         }
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    navigationManager.path.removeLast()
-                }) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(isDarkModeEnabled ? .white : .black)
-                }
+                backButton
             }
         }
         .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
         .onAppear {
             loadCarrierData()
+        }
+    }
+    
+    private var routeHeaderView: some View {
+        VStack {
+            Text("\(routeViewModel.fromText) \(Image(systemName: "arrow.right")) \(routeViewModel.toText)")
+                .fontWeight(.bold)
+                .font(.system(size: 24))
+                .foregroundColor(isDarkModeEnabled ? .white : .black)
+                .background(Color.clear)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
+    }
+    
+    @ViewBuilder
+    private var contentView: some View {
+        if viewModel.isLoading {
+            loadingView
+        } else if let _ = viewModel.errorMessage, viewModel.carriers.isEmpty {
+            emptyStateView
+        } else if viewModel.carriers.isEmpty {
+            emptyStateView
+        } else {
+            carrierListView
+        }
+    }
+    
+    private var loadingView: some View {
+        VStack {
+            Spacer()
+            ProgressView("Загрузка рейсов...")
+                .progressViewStyle(CircularProgressViewStyle())
+            Spacer()
+        }
+    }
+    
+    private var emptyStateView: some View {
+        VStack {
+            Spacer()
+            Text("Вариантов нет")
+                .font(.system(size: 24, weight: .bold))
+                .multilineTextAlignment(.center)
+            Spacer()
+        }
+    }
+    
+    private var carrierListView: some View {
+        List {
+            ForEach(viewModel.carriers) { carrier in
+                CarrierView(carrier: carrier)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        navigationManager.path.append(AppScreen.carrierInfo(carrier: carrier))
+                    }
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+            }
+            
+            Color.clear
+                .frame(height: 130)
+                .listRowBackground(Color.clear)
+                .listRowInsets(EdgeInsets())
+                .listRowSeparator(.hidden)
+        }
+        .scrollContentBackground(.hidden)
+        .background(isDarkModeEnabled ? Color.black : Color.white)
+        .listStyle(PlainListStyle())
+    }
+    
+    private var filterButton: some View {
+        Button(action: {
+            navigationManager.path.append(AppScreen.filters)
+        }) {
+            Text("Уточнить время")
+                .frame(width: 343, height: 60)
+                .fontWeight(.bold)
+                .font(.system(size: 17))
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(16)
+        }
+        .padding(.bottom, 58)
+    }
+    
+    private var backButton: some View {
+        Button(action: {
+            navigationManager.path.removeLast()
+        }) {
+            Image(systemName: "chevron.left")
+                .foregroundColor(isDarkModeEnabled ? .white : .black)
         }
     }
     

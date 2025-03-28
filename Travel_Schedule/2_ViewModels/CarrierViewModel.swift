@@ -14,6 +14,15 @@ class CarrierViewModel: ObservableObject {
     @Published var allowTransfers: Bool = true
     
     func updateCarriers(from searchResults: Components.Schemas.Search) {
+        if searchResults.segments == nil || searchResults.segments!.isEmpty {
+            DispatchQueue.main.async {
+                self.carriers = []
+                self.isLoading = false
+                self.errorMessage = nil
+            }
+            return
+        }
+        
         guard let segments = searchResults.segments, !segments.isEmpty else { return }
         
         var allCarriers: [CarrierModel] = []
@@ -60,14 +69,14 @@ class CarrierViewModel: ObservableObject {
                     } else if let transferArray = segment.transfers as? [Any], !transferArray.isEmpty {
                         hasTransfer = true
                     }
-
+                    
                     var transferLocation: String? = nil
                     if hasTransfer, let transferPoints = segment.transfer_points, !transferPoints.isEmpty {
                         let transferStations = transferPoints.compactMap { $0.station?.title }
                         transferLocation = transferStations.joined(separator: ", ")
                     }
                     
-             //     let enrichedName = "\(title) (№\(number))" c номером рейса
+                    //     let enrichedName = "\(title) (№\(number))" c номером рейса
                     let enrichedName = title
                     
                     let carrierModel = CarrierModel(
@@ -86,11 +95,10 @@ class CarrierViewModel: ObservableObject {
                 }
             }
         }
-        
         DispatchQueue.main.async {
+            self.carriers = allCarriers
             self.isLoading = false
             self.errorMessage = nil
-            self.carriers = allCarriers
         }
     }
     

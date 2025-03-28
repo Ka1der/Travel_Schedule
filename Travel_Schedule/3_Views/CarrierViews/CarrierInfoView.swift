@@ -15,117 +15,52 @@ struct CarrierInfoView: View {
     var carrier: CarrierModel
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+        VStack(spacing: 20) {
+            
+            VStack(spacing: 10) {
+                Image("rzdLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 60)
+                
                 HStack {
-                    CarrierLogoView(logoSource: carrier.logoSource)
-                        .frame(width: 60, height: 60)
-                    
-                    Text(carrier.name)
+                    Text("ОАО «РЖД»")
                         .font(.title3)
                         .bold()
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top, 16)
-                
-                if let departureTime = carrier.departureTime,
-                   let arrivalTime = carrier.arrivalTime,
-                   let duration = carrier.duration {
-                    
-                    VStack(alignment: .leading, spacing: 16) {
-                        Text("Информация о рейсе")
-                            .font(.headline)
-                            .padding(.top, 8)
-                        
-                        HStack {
-                            Text("Отправление:")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(departureTime)
-                                .bold()
-                        }
-                        
-                        HStack {
-                            Text("Прибытие:")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(arrivalTime)
-                                .bold()
-                        }
-                        
-                        HStack {
-                            Text("Длительность:")
-                                .foregroundColor(.secondary)
-                            Spacer()
-                            Text(TimeFormatter.formatDuration(minutes: duration))
-                                .bold()
-                        }
-                        
-                        if let tripDate = carrier.tripDate {
-                            HStack {
-                                Text("Дата поездки:")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text(tripDate)
-                                    .bold()
-                            }
-                        }
-                        
-                        if carrier.hasTransfer, let location = carrier.transferLocation {
-                            HStack {
-                                Text("Пересадка:")
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text(location)
-                                    .foregroundColor(.red)
-                                    .bold()
-                            }
-                        }
-                    }
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(uiColor: .systemGray6))
-                    )
-                }
-                
-                // Контактная информация
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Контактная информация")
-                        .font(.headline)
-                        .padding(.top, 8)
-                    
-                    HStack {
-                        Text("E-mail:")
-                            .foregroundColor(.secondary)
-                        Spacer()
+            }
+            .padding(.top, 16)
+            
+            VStack(spacing: 16) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("E-mail")
+                            .font(.subheadline)
                         Link("i.lozgkina@yandex.ru",
                              destination: URL(string: "mailto:i.lozgkina@yandex.ru")!)
+                        .font(.subheadline)
                         .foregroundColor(.blue)
                     }
-                    
-                    HStack {
-                        Text("Телефон:")
-                            .foregroundColor(.secondary)
-                        Spacer()
+                    Spacer()
+                }
+                
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Телефон")
+                            .font(.subheadline)
                         Link("+7 (904) 329-27-71",
                              destination: URL(string: "tel:+79043292771")!)
+                        .font(.subheadline)
                         .foregroundColor(.blue)
                     }
+                    Spacer()
                 }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Color(uiColor: .systemGray6))
-                )
-                
-                Spacer()
             }
-            .padding(.horizontal)
+            
+            Spacer()
         }
-        .navigationTitle("О перевозчике")
+        .padding()
         .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
         .navigationBarBackButtonHidden(true)
         .navigationBarItems(leading: Button(action: {
