@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 class CarrierViewModel: ObservableObject {
     @Published var carriers: [CarrierModel] = []
@@ -13,10 +14,37 @@ class CarrierViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     @Published var allowTransfers: Bool = true
     
+    private var allCarriers: [CarrierModel] = []
+    private let filterService = FilterService.shared
+    private var cancellables = Set<AnyCancellable>()
+    
+    init() {
+        filterService.$currentFilters
+            .sink { [weak self] newFilters in
+                self?.applyFilters(with: newFilters)
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchData(from: String, to: String, date: String, allowTransfers: Bool = true) {
+        isLoading = true
+        errorMessage = nil
+        self.allowTransfers = allowTransfers
+        
+        ServiceManager.shared.requestSearch(
+            from: from,
+            to: to,
+            date: date,
+            transfers: allowTransfers,
+            carrierViewModel: self
+        )
+    }
+    
     func updateCarriers(from searchResults: Components.Schemas.Search) {
         if searchResults.segments == nil || searchResults.segments!.isEmpty {
             DispatchQueue.main.async {
                 self.carriers = []
+                self.allCarriers = []
                 self.isLoading = false
                 self.errorMessage = nil
             }
@@ -25,7 +53,7 @@ class CarrierViewModel: ObservableObject {
         
         guard let segments = searchResults.segments, !segments.isEmpty else { return }
         
-        var allCarriers: [CarrierModel] = []
+        var newCarriers: [CarrierModel] = []
         
         for segment in segments {
             if let carrier = segment.thread?.carrier,
@@ -62,25 +90,16 @@ class CarrierViewModel: ObservableObject {
                     }
                     
                     var hasTransfer = false
+                    var transferLocation: String? = nil
+                    
                     if let transferPoints = segment.transfer_points, !transferPoints.isEmpty {
                         hasTransfer = true
-                    } else if let transferCount = segment.transfers as? Int {
-                        hasTransfer = transferCount > 0
-                    } else if let transferArray = segment.transfers as? [Any], !transferArray.isEmpty {
-                        hasTransfer = true
-                    }
-                    
-                    var transferLocation: String? = nil
-                    if hasTransfer, let transferPoints = segment.transfer_points, !transferPoints.isEmpty {
                         let transferStations = transferPoints.compactMap { $0.station?.title }
                         transferLocation = transferStations.joined(separator: ", ")
                     }
                     
-                    //     let enrichedName = "\(title) (№\(number))" c номером рейса
-                    let enrichedName = title
-                    
                     let carrierModel = CarrierModel(
-                        name: enrichedName,
+                        name: title,
                         logo: logoUrl,
                         code: codeInt,
                         departureTime: departureTimeStr,
@@ -91,28 +110,34 @@ class CarrierViewModel: ObservableObject {
                         transferLocation: transferLocation
                     )
                     
-                    allCarriers.append(carrierModel)
+                    newCarriers.append(carrierModel)
                 }
             }
         }
+        
         DispatchQueue.main.async {
-            self.carriers = allCarriers
+            self.allCarriers = newCarriers
             self.isLoading = false
             self.errorMessage = nil
+            self.applyFilters(with: self.filterService.currentFilters)
         }
     }
     
-    func fetchData(from: String, to: String, date: String, allowTransfers: Bool = true) {
-        isLoading = true
-        errorMessage = nil
-        self.allowTransfers = allowTransfers
+    private func applyFilters(with settings: FilterSettings) {
+        guard !allCarriers.isEmpty else {
+            carriers = []
+            return
+        }
         
-        ServiceManager.shared.requestSearch(
-            from: from,
-            to: to,
-            date: date,
-            transfers: allowTransfers,
-            carrierViewModel: self
-        )
+        let filteredResult = allCarriers.filter { carrier in
+            let passesTimeFilter = settings.isTimeInSelectedPeriods(carrier.departureTime)
+            let passesTransferFilter = settings.showTransfers ? true : !carrier.hasTransfer
+            
+            return passesTimeFilter && passesTransferFilter
+        }
+
+        DispatchQueue.main.async {
+            self.carriers = filteredResult
+        }
     }
 }

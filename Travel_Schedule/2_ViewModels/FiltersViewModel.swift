@@ -8,19 +8,20 @@
 import SwiftUI
 import Combine
 
-final class FiltersViewModel: ObservableObject {
+class FiltersViewModel: ObservableObject {
     @Published var selectedTimes: Set<String> = []
-    @Published var showTransfers: Bool? = nil
+    @Published var showTransfers: Bool = true
     
-    let timePeriods = [
-        "Утро 06:00 - 12:00",
-        "День 12:00 - 18:00",
-        "Вечер 18:00 - 00:00",
-        "Ночь 00:00 - 06:00"
-    ]
+    let timePeriods = FilterSettings.timePeriods
+    private let filterService = FilterService.shared
+    
+    init() {
+        self.selectedTimes = filterService.currentFilters.selectedTimePeriodsIndices
+        self.showTransfers = filterService.currentFilters.showTransfers
+    }
     
     var canApplyFilters: Bool {
-        return !selectedTimes.isEmpty && showTransfers != nil
+        return true
     }
     
     func toggleTimeSelection(for period: String) {
@@ -36,6 +37,11 @@ final class FiltersViewModel: ObservableObject {
     }
     
     func applyFilters() {
-        // Логика применения фильтров
+        let newFilters = FilterSettings(
+            selectedTimePeriodsIndices: selectedTimes,
+            showTransfers: showTransfers
+        )
+        
+        filterService.updateFilters(newFilters)
     }
 }
