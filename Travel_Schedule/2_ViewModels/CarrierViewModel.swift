@@ -61,6 +61,13 @@ class CarrierViewModel: ObservableObject {
                let title = carrier.title,
                let number = segment.thread?.number {
                 
+                var codeString = String(describing: codeValue).trimmingCharacters(in: CharacterSet.decimalDigits.inverted)
+                
+                if codeString.isEmpty {
+                    codeString = "0"
+                    print("Empty code after cleaning, using default")
+                }
+                
                 let codeInt = Int(String(describing: codeValue)) ?? 0
                 if codeInt > 0 {
                     var logoUrl = "NoLogo"
@@ -101,7 +108,8 @@ class CarrierViewModel: ObservableObject {
                     let carrierModel = CarrierModel(
                         name: title,
                         logo: logoUrl,
-                        code: codeInt,
+                        code: Int(codeString),
+                        codeString: codeString,
                         departureTime: departureTimeStr,
                         arrivalTime: arrivalTimeStr,
                         duration: durationMinutes,
@@ -135,7 +143,7 @@ class CarrierViewModel: ObservableObject {
             
             return passesTimeFilter && passesTransferFilter
         }
-
+        
         DispatchQueue.main.async {
             self.carriers = filteredResult
         }

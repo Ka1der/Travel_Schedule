@@ -329,30 +329,23 @@ final class ServiceManager {
     
     // MARK: - Carrier
     
-    func requestCarrier() {
-        do {
-            let client = try Client(
-                serverURL: Servers.Server1.url(),
-                transport: URLSessionTransport()
-            )
-            let service = CarrierService(
-                client: client,
-                apikey: Config.apiKey
-            )
-            Task {
-                do {
-                    let stations = try await service.getCarrier(
-                        apikey: Config.apiKey,
-                        code: "5483"
-                    )
-                    print(stations)
-                } catch {
-                    print("Failed to fetch carrier: \(error)")
-                }
-            }
-        } catch {
-            print("Failed to create client: \(error)")
-        }
+    func requestCarrierInfo(code: String) async throws -> Components.Schemas.Carrier {
+        let client = try Client(
+            serverURL: Servers.Server1.url(),
+            transport: URLSessionTransport()
+        )
+        
+        let service = CarrierService(
+            client: client,
+            apikey: Config.apiKey
+        )
+
+        let carrierInfo = try await service.getCarrier(
+            apikey: Config.apiKey,
+            code: code
+        )
+        
+        return carrierInfo
     }
     
     // MARK: - Copyright

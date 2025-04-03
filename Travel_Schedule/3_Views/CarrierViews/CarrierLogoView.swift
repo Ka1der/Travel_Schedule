@@ -9,6 +9,8 @@ import SwiftUI
 
 struct CarrierLogoView: View {
     let logoSource: CarrierModel.LogoSource
+    var width: CGFloat = 38
+    var height: CGFloat = 38
     
     var body: some View {
         Group {
@@ -41,7 +43,7 @@ struct CarrierLogoView: View {
                 }
             }
         }
-        .frame(width: 38, height: 38)
+        .frame(width: width, height: height)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .background(
             RoundedRectangle(cornerRadius: 12)

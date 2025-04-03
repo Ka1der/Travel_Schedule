@@ -12,6 +12,7 @@ struct CarrierModel: Identifiable, Hashable {
     let name: String
     let logoSource: LogoSource
     let code: Int?
+    let codeString: String?
     let departureTime: String?
     let arrivalTime: String?
     let duration: Int?
@@ -27,6 +28,7 @@ struct CarrierModel: Identifiable, Hashable {
     init(name: String,
          logo: String,
          code: Int? = nil,
+         codeString: String? = nil,
          departureTime: String? = nil,
          arrivalTime: String? = nil,
          duration: Int? = nil,
@@ -36,6 +38,7 @@ struct CarrierModel: Identifiable, Hashable {
         
         self.name = name
         self.code = code
+        self.codeString = codeString ?? code.map { String($0) }
         self.departureTime = departureTime
         self.arrivalTime = arrivalTime
         self.duration = duration

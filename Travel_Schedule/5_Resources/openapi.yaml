@@ -114,7 +114,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Carrier'
+                $ref: '#/components/schemas/CarrierResponse'
 
   /v3.0/nearest_settlement/:
     get:
@@ -335,6 +335,15 @@ paths:
 
 components:
   schemas:
+    CarrierResponse:
+      type: object
+      properties:
+        carrier:
+          $ref: '#/components/schemas/Carrier'
+      required:
+        - carrier
+      description: Ответ API с информацией о перевозчике
+
     Station:
       type: object
       properties:
@@ -444,31 +453,49 @@ components:
       properties:
         code:
           type: integer
+          nullable: true
         title:
           type: string
+          nullable: true
         address:
           type: string
+          nullable: true
         url:
           type: string
+          nullable: true
         email:
           type: string
+          nullable: true
         contacts:
           type: string
+          nullable: true
         phone:
           type: string
+          nullable: true
         logo:
           type: string
           description: URL логотипа перевозчика
+          nullable: true
         logo_svg:
           type: string
           description: URL SVG-логотипа перевозчика
+          nullable: true
         code_icao:
           type: string
+          nullable: true
         code_iata:
           type: string
+          nullable: true
         codes:
           type: object
           additionalProperties: true
+          nullable: true
+        offices:
+          type: array
+          items:
+            type: object
+          nullable: true
+          description: Список офисов перевозчика
 
     NearestSettlement:
       type: object
