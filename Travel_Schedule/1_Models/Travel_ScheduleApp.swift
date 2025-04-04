@@ -15,6 +15,7 @@ struct Travel_ScheduleApp: App {
     @StateObject private var navigationManager = NavigationKit.createNavigationManager()
     @StateObject private var storyViewModel = StoryViewModel()
     @StateObject private var networkMonitor = NetworkMonitor.shared
+    @StateObject private var errorManager = ErrorManager.shared
     @AppStorage("isDarkMode") private var isDarkModeEnabled: Bool = false
     
     var body: some Scene {
@@ -31,11 +32,20 @@ struct Travel_ScheduleApp: App {
                         ServiceManager.shared.requestStationsList()
                     }
                 
+                // Ошибка сети
                 if !networkMonitor.isConnected {
                     NoInternetVIew()
                         .environmentObject(navigationManager)
                         .transition(.opacity)
-                        .zIndex(100) 
+                        .zIndex(100)
+                }
+                
+                // Ошибка сервера
+                if errorManager.hasServerError {
+                    ServerErrorView()
+                        .environmentObject(navigationManager)
+                        .transition(.opacity)
+                        .zIndex(101)
                 }
             }
             .animation(.easeInOut, value: networkMonitor.isConnected)

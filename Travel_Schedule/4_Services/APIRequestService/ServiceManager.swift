@@ -36,6 +36,30 @@ final class ServiceManager {
         requestStationsList()
     }
     
+    private func handleResponseError(_ error: Error) {
+
+        if let httpError = error as? HTTPURLResponse, httpError.statusCode >= 500 {
+            ErrorManager.shared.showServerError()
+            return
+        }
+
+        if let nsError = error as? NSError {
+          
+            let criticalCodes = [
+                NSURLErrorCannotDecodeContentData,
+                NSURLErrorCannotParseResponse,
+                NSURLErrorBadServerResponse,
+                NSURLErrorCannotConnectToHost
+            ]
+            
+            if criticalCodes.contains(nsError.code) {
+                ErrorManager.shared.showServerError()
+                return
+            }
+        }
+        print("Ошибка запроса: \(error.localizedDescription)")
+    }
+    
     // MARK: - Nearest Stations
     
     func requestNearestStations(for city: Config.Coordinates.City) {
@@ -134,8 +158,9 @@ final class ServiceManager {
                     )
                     //                    print(stations)
                     StationFilters.shared.processApiResponse(stations)
-                } catch {
+                } catch let error {
                     print("Failed to fetch station list: \(error)")
+                    handleResponseError(error)
                 }
             }
         } catch {
@@ -341,6 +366,7 @@ final class ServiceManager {
     // MARK: - Carrier
     
     func requestCarrierInfo(code: String) async throws -> Components.Schemas.Carrier {
+        do {
         let client = try Client(
             serverURL: Servers.Server1.url(),
             transport: URLSessionTransport()
@@ -357,6 +383,10 @@ final class ServiceManager {
         )
         
         return carrierInfo
+        } catch let error {
+              handleResponseError(error)
+              throw error
+          }
     }
     
     // MARK: - Copyright
