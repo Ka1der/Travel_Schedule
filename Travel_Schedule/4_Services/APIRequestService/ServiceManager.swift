@@ -13,8 +13,15 @@ final class ServiceManager {
     
     static let shared = ServiceManager()
     private var cancellables = Set<AnyCancellable>()
+    private let networkMonitor = NetworkMonitor.shared
     
-    private init() {}
+    private init() {
+        networkMonitor.connectionRestoredPublisher
+            .sink { [weak self] _ in
+                self?.handleNetworkReconnection()
+            }
+            .store(in: &cancellables)
+    }
     
     func setupSubscriptions(with viewModel: RouteViewModel) {
         Publishers.CombineLatest(viewModel.$fromStationCode, viewModel.$toStationCode)
@@ -23,6 +30,10 @@ final class ServiceManager {
                 self?.requestSearch(from: fromCode, to: toCode)
             }
             .store(in: &cancellables)
+    }
+    
+    private func handleNetworkReconnection() {
+        requestStationsList()
     }
     
     // MARK: - Nearest Stations
