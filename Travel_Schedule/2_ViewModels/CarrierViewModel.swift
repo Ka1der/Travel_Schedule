@@ -31,13 +31,15 @@ class CarrierViewModel: ObservableObject {
         errorMessage = nil
         self.allowTransfers = allowTransfers
         
-        ServiceManager.shared.requestSearch(
-            from: from,
-            to: to,
-            date: date,
-            transfers: allowTransfers,
-            carrierViewModel: self
-        )
+        Task {
+            await ServiceManager.shared.requestSearch(
+                from: from,
+                to: to,
+                date: date,
+                transfers: allowTransfers,
+                carrierViewModel: self
+            )
+        }
     }
     
     func updateCarriers(from searchResults: Components.Schemas.Search) {
