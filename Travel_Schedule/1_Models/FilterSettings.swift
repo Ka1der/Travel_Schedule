@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FilterSettings: Equatable {
+struct FilterSettings: Equatable, Sendable {
     var selectedTimePeriodsIndices: Set<String> = []
     var showTransfers: Bool = true
     

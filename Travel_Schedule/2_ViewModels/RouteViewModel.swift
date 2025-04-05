@@ -97,7 +97,5 @@ final class RouteViewModel: ObservableObject {
             - Тип транспорта: \(toPoint.transportType)
             Коды станций: \(fromPoint.code) -> \(toPoint.code)
             """)
-        
-        // реализация поиска маршрутов
     }
 }

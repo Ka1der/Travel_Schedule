@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RoutePoint {
+struct RoutePoint: Sendable {
     enum PointType {
         case from, to
     }

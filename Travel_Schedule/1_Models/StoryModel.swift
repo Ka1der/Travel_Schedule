@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct StoryModel {
+struct StoryModel: Sendable {
     let backgroundImage: String
     let title: String
     let description: String

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CarrierModel: Identifiable, Hashable {
+struct CarrierModel: Identifiable, Hashable, Sendable {
     let id = UUID()
     let name: String
     let logoSource: LogoSource

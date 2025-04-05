@@ -8,7 +8,12 @@
 import Foundation
 import Combine
 
-typealias StationInfo = (title: String, code: String, stationType: String, transportType: String)
+struct StationInfo: Sendable {
+    let title: String
+    let code: String
+    let stationType: String
+    let transportType: String
+}
 
 final class StationFilters {
     private var cancellables = Set<AnyCancellable>()
@@ -28,7 +33,15 @@ final class StationFilters {
         selectedCity = city
         let stations = getStationsForCity(city: city)
         selectedCityStationsPublisher.send(stations)
-        StationsStorage.shared.updateStationsForCity(stations)
+        
+        let stationTuples = stations.map { station -> (title: String, code: String, stationType: String, transportType: String) in
+            return (title: station.title,
+                    code: station.code,
+                    stationType: station.stationType,
+                    transportType: station.transportType)
+        }
+        
+        StationsStorage.shared.updateStationsForCity(stationTuples)
         print("Выбран город: \"\(city)\", число станций: \(stations.count)")
     }
     
@@ -122,7 +135,7 @@ final class StationFilters {
                         continue
                     }
                     
-                    stationsForCity.append((
+                    stationsForCity.append(StationInfo(
                         title: title,
                         code: code,
                         stationType: station.station_type ?? "Не указан",
