@@ -10,6 +10,7 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 
 typealias Carrier = Components.Schemas.Carrier
+typealias CarrierResponse = Components.Schemas.CarrierResponse
 
 protocol CarrierServiceProtocol {
     func getCarrier(apikey: String, code: String) async throws -> Carrier
@@ -33,6 +34,8 @@ final class CarrierService: CarrierServiceProtocol {
             apikey: apikey,
             code: code
         ))
-        return try response.ok.body.json
+        let carrierResponse = try response.ok.body.json
+
+        return carrierResponse.carrier
     }
 }

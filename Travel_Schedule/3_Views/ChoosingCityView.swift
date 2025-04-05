@@ -43,12 +43,22 @@ struct ChoosingCityView: View {
             .cornerRadius(10)
             .padding()
             
-            if viewModel.filteredCities.isEmpty {
-                Text("Город не найден")
-                    .font(.system(size: 24))
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            if viewModel.isLoading {
+                Spacer()
+                ProgressView("Загрузка городов...")
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .foregroundColor(isDarkModeEnabled ? .white : .black)
+                Spacer()
             }
+            
+            else if viewModel.filteredCities.isEmpty {
+                                Spacer()
+                                Text("Город не найден")
+                                    .font(.system(size: 24))
+                                    .fontWeight(.bold)
+                                    .foregroundColor(isDarkModeEnabled ? .white : .black)
+                                Spacer()
+                            }
             
             List(viewModel.filteredCities, id: \.self) { city in
                 HStack {

@@ -7,35 +7,26 @@
 
 import Foundation
 
-struct RoutePoint {
+struct RoutePoint: Sendable {
     enum PointType {
         case from, to
-        
-        var defaultText: String {
-            switch self {
-            case .from: return "Откуда"
-            case .to: return "Куда"
-            }
-        }
     }
     
+    let type: PointType
     var city: String = ""
     var station: String = ""
-    let type: PointType
+    var code: String = ""
+    var stationType: String = ""
+    var transportType: String = ""
     
-    var isEmpty: Bool { city.isEmpty }
-    
-    var formattedText: String {
-        if city.isEmpty {
-            return type.defaultText
-        } else if station.isEmpty {
-            return city
-        } else {
-            return "\(city) (\(station))"
-        }
+    var isEmpty: Bool {
+        city.isEmpty || station.isEmpty || code.isEmpty
     }
     
-    init(type: PointType = .from) {
-        self.type = type
+    var formattedText: String {
+        if isEmpty {
+            return type == .from ? "Откуда" : "Куда"
+        }
+        return "\(city) - \(station)"
     }
 }

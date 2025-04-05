@@ -114,7 +114,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Carrier'
+                $ref: '#/components/schemas/CarrierResponse'
 
   /v3.0/nearest_settlement/:
     get:
@@ -283,6 +283,13 @@ paths:
           schema:
             type: string
           description: Типы транспорта (через запятую)
+        - name: transfers
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Разрешить маршруты с пересадками
         - name: format
           in: query
           required: false
@@ -328,6 +335,15 @@ paths:
 
 components:
   schemas:
+    CarrierResponse:
+      type: object
+      properties:
+        carrier:
+          $ref: '#/components/schemas/Carrier'
+      required:
+        - carrier
+      description: Ответ API с информацией о перевозчике
+
     Station:
       type: object
       properties:
@@ -339,6 +355,21 @@ components:
           type: string
         popular_title:
           type: string
+        codes:
+          type: object
+          properties:
+            yandex_code:
+              type: string
+            esr:
+              type: string
+            iata:
+              type: string
+            icao:
+              type: string
+            sirena:
+              type: string
+            express:
+              type: string
         type:
           type: string
         type_choices:
@@ -393,11 +424,17 @@ components:
           items:
             type: object
             properties:
+              title:
+                type: string
+                description: Название страны
               regions:
                 type: array
                 items:
                   type: object
                   properties:
+                    title:
+                      type: string
+                      description: Название региона
                     settlements:
                       type: array
                       items:
@@ -405,6 +442,7 @@ components:
                         properties:
                           title:
                             type: string
+                            description: Название населенного пункта
                           stations:
                             type: array
                             items:
@@ -414,28 +452,50 @@ components:
       type: object
       properties:
         code:
-          type: string
+          type: integer
+          nullable: true
         title:
           type: string
+          nullable: true
         address:
           type: string
+          nullable: true
         url:
           type: string
+          nullable: true
         email:
           type: string
+          nullable: true
         contacts:
           type: string
+          nullable: true
         phone:
           type: string
+          nullable: true
         logo:
           type: string
+          description: URL логотипа перевозчика
+          nullable: true
+        logo_svg:
+          type: string
+          description: URL SVG-логотипа перевозчика
+          nullable: true
         code_icao:
           type: string
+          nullable: true
         code_iata:
           type: string
+          nullable: true
         codes:
           type: object
           additionalProperties: true
+          nullable: true
+        offices:
+          type: array
+          items:
+            type: object
+          nullable: true
+          description: Список офисов перевозчика
 
     NearestSettlement:
       type: object
@@ -614,6 +674,33 @@ components:
           $ref: '#/components/schemas/Station'
         duration:
           type: integer
+        transfers:
+          oneOf:
+            - type: integer
+              description: Количество пересадок
+            - type: array
+              description: Информация о пересадках
+              items:
+                type: object
+                properties:
+                  station:
+                    $ref: '#/components/schemas/Station'
+                additionalProperties: true
+        transfer_points:
+          type: array
+          items:
+            type: object
+            properties:
+              station:
+                $ref: '#/components/schemas/Station'
+              departure:
+                type: string
+                format: date-time
+              arrival:
+                type: string
+                format: date-time
+              duration:
+                type: integer
         start_date:
           type: string
           format: date

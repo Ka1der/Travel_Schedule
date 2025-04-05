@@ -22,54 +22,65 @@ struct ChoosingStationsView: View {
     }
     
     var body: some View {
-        VStack{
-            HStack {
-                Image(systemName: "magnifyingglass")
-                    .foregroundColor(.gray)
-                TextField("Введите запрос", text: $viewModel.searchText)
-                
-                if !viewModel.searchText.isEmpty {
-                    Button(action: {
-                        viewModel.searchText = ""
-                    }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.gray)
+        ZStack {
+            (isDarkModeEnabled ? Color.black : Color.white).ignoresSafeArea()
+            VStack {
+                HStack {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundColor(.gray)
+                    TextField("Введите запрос", text: $viewModel.searchText)
+                    
+                    if !viewModel.searchText.isEmpty {
+                        Button(action: {
+                            viewModel.searchText = ""
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.gray)
+                        }
                     }
                 }
+                .padding(.horizontal)
+                .padding(.vertical, 10)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding()
+                
+                if viewModel.filteredStations.isEmpty {
+                    Spacer()
+                    Text("Станция не найдена")
+                        .font(.system(size: 24))
+                        .fontWeight(.bold)
+                        .foregroundColor(isDarkModeEnabled ? .white : .black)
+                    Spacer()
+                } else {
+                    List(viewModel.filteredStations, id: \.code) { station in
+                        HStack {
+                            VStack(alignment: .leading) {
+                                Text(station.title)
+                                    .font(.system(size: 17))
+                                    .foregroundColor(isDarkModeEnabled ? .white : .black)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(isDarkModeEnabled ? .white : .black)
+                        }
+                        .padding(.vertical, 8)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            routeViewModel.selectStation(station, for: selectionState)
+                            navigationManager.path.removeLast(navigationManager.path.count)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowBackground(Color.clear)
+                    }
+                    .scrollContentBackground(.hidden)
+                    .background(isDarkModeEnabled ? Color.black : Color.white)
+                    .listStyle(PlainListStyle())
+                }
             }
-            .padding(.horizontal)
-            .padding(.vertical, 10)
-            .background(isDarkModeEnabled ? Color(.systemGray5) : Color(.systemGray6))
-            .cornerRadius(10)
-            .padding()
-            
-            if viewModel.filteredStations.isEmpty {
-                Text("Станция не найдена")
-                    .font(.system(size: 24))
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            
-            List(viewModel.filteredStations, id: \.self) { station in
-                          HStack {
-                              Text(station)
-                                  .font(.system(size: 17))
-                              
-                              Spacer()
-                              
-                              Image(systemName: "chevron.right")
-                                  .foregroundColor(isDarkModeEnabled ? .white : .black)
-                          }
-                          .padding(.vertical, 8)
-                          .contentShape(Rectangle())
-                          .onTapGesture {
-                              routeViewModel.selectStation(station, for: selectionState)
-                              navigationManager.path.removeLast(navigationManager.path.count)
-                          }
-                          .listRowSeparator(.hidden)
-                      }
-                      .listStyle(PlainListStyle())
-                  }
+        }
         .navigationTitle("Выбор станции")
         .navigationBarBackButtonHidden(true)
         .toolbar {
