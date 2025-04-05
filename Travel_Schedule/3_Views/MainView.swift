@@ -65,7 +65,6 @@ struct MainView: View {
                                     .foregroundColor(.white)
                                     .cornerRadius(16)
                             }
-                            
                             .transition(.opacity)
                         }
                     }
@@ -90,4 +89,5 @@ struct MainView: View {
         .environmentObject(RouteViewModel())
         .environmentObject(MainViewModel())
         .environmentObject(NavigationKit.createNavigationManager())
+        .environmentObject(StoryViewModel())
 }

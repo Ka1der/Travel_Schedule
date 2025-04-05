@@ -108,7 +108,7 @@ struct CarrierInfoView: View {
                 .font(.system(size: 18, weight: .semibold))
                 .foregroundColor(isDarkModeEnabled ? .white : .black)
         })
-        .onAppear {
+        .task {
             if let code = carrier.code, code > 0 {
                 viewModel.loadCarrierInfo(code: code)
             }

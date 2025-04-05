@@ -34,7 +34,7 @@ struct CarrierListView: View {
             }
         }
         .preferredColorScheme(isDarkModeEnabled ? .dark : .light)
-        .onAppear {
+        .task {
             loadCarrierData()
         }
     }
