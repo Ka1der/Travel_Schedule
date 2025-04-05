@@ -49,20 +49,37 @@ final class StationFilters {
     // MARK: - Filtering Methods
     
     func filterRussianCities(from response: Components.Schemas.StationsList) {
-        let cities = response.countries?
-            .first { $0.title == "Россия" }?
-            .regions?
-            .compactMap { $0.settlements }
-            .flatMap { $0 }
-            .compactMap { $0.title } ?? []
+        var cities: [String] = []
+        var uniqueCities: [String] = []
         
-        let uniqueCities = Array(Set(cities)).sorted()
+        if let russia = response.countries?.first(where: { $0.title == "Россия" }) {
+            if let regions = russia.regions {
+                for region in regions {
+                    if let settlements = region.settlements {
+                        for settlement in settlements {
+                            if let title = settlement.title,
+                               !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                                cities.append(title)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        cities.sort()
+        for city in cities {
+            if uniqueCities.isEmpty || uniqueCities.last! != city {
+                uniqueCities.append(city)
+            }
+        }
+        
         CitiesStorage.shared.updateCities(uniqueCities)
         print("\nГорода России: \(uniqueCities.count)")
     }
     
     func filterRussianStations(from response: Components.Schemas.StationsList) {
-        var stats = StationStatistics()
+        var stationsWithCodes = 0
         
         if let russia = response.countries?.first(where: { $0.title == "Россия" }) {
             let allStations = russia.regions?
@@ -71,36 +88,19 @@ final class StationFilters {
                 .compactMap { $0.stations }
                 .flatMap { $0 } ?? []
             
-            stats.total = allStations.count
-            
             for station in allStations {
-                if let title = station.title {
-                    if !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                        if station.codes?.yandex_code != nil {
-                            stats.withCodes += 1
-                        } else {
-                            stats.withoutCodes += 1
-                        }
-                    } else {
-                        stats.withEmptyNames += 1
-                    }
-                } else {
-                    stats.withoutNames += 1
+                if let title = station.title,
+                   !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   station.codes?.yandex_code != nil {
+                    stationsWithCodes += 1
                 }
             }
         }
-        
-        print("Статистика станций в России:")
-        print("- Всего станций: \(stats.total)")
-        print("- С кодами: \(stats.withCodes)")
-        print("- Без кодов: \(stats.withoutCodes)")
-        print("- С пустыми названиями: \(stats.withEmptyNames)")
-        print("- Без названий: \(stats.withoutNames)")
+        print("Станций с кодами: \(stationsWithCodes)")
     }
     
     private func createCityToStationsMap(from response: Components.Schemas.StationsList) {
         cityToStationsMap.removeAll()
-        var skippedCount = 0
         
         guard let russia = response.countries?.first(where: { $0.title == "Россия" }) else {
             return
@@ -108,39 +108,32 @@ final class StationFilters {
         
         for region in russia.regions ?? [] {
             for settlement in region.settlements ?? [] {
-                guard let cityName = settlement.title else { continue }
-                var stationsForCity: [StationInfo] = []
-                for station in settlement.stations ?? [] {
-                    if let title = station.title,
-                       !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
-                       let code = station.codes?.yandex_code {
-                        
-                        stationsForCity.append((
-                            title: title,
-                            code: code,
-                            stationType: station.station_type ?? "Не указан",
-                            transportType: station.transport_type ?? "Не указан"
-                        ))
-                    } else {
-                        skippedCount += 1
-                    }
+                guard let cityName = settlement.title,
+                      !cityName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    continue
                 }
+                
+                var stationsForCity: [StationInfo] = []
+                
+                for station in settlement.stations ?? [] {
+                    guard let title = station.title,
+                          !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                          let code = station.codes?.yandex_code else {
+                        continue
+                    }
+                    
+                    stationsForCity.append((
+                        title: title,
+                        code: code,
+                        stationType: station.station_type ?? "Не указан",
+                        transportType: station.transport_type ?? "Не указан"
+                    ))
+                }
+                
                 if !stationsForCity.isEmpty {
                     cityToStationsMap[cityName] = stationsForCity
                 }
             }
         }
-        
-        print("Пропущено станций без названия или кода: \(skippedCount)")
     }
-}
-
-// MARK: - Helper Structures
-
-private struct StationStatistics {
-    var total = 0
-    var withCodes = 0
-    var withoutCodes = 0
-    var withEmptyNames = 0
-    var withoutNames = 0
 }

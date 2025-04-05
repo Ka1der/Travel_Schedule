@@ -25,8 +25,15 @@ class CitiesStorage {
     private init() {}
     
     func updateCities(_ newCities: [String]) {
-        cities = newCities
-        citiesPublisher.send(newCities)
+        let filteredCities = newCities.filter {
+            !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }
+        cities = filteredCities
+        citiesPublisher.send(filteredCities)
+        
+        if newCities.count != filteredCities.count {
+            print("Отфильтровано \(newCities.count - filteredCities.count) городов с пустыми названиями")
+        }
     }
 }
 
@@ -64,9 +71,12 @@ class CitySelectionViewModel: ObservableObject {
     
     private func filterCities(with query: String) {
         if query.isEmpty {
-            filteredCities = cities
+            filteredCities = cities.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         } else {
-            filteredCities = cities.filter { $0.lowercased().contains(query.lowercased()) }
+            filteredCities = cities.filter {
+                !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+                $0.lowercased().contains(query.lowercased())
+            }
         }
     }
 }
