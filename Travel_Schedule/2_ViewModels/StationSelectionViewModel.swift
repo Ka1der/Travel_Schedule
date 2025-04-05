@@ -106,17 +106,17 @@ class StationSelectionViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] cityStations in
                 guard let self = self else { return }
-                self.stations = cityStations
+
+                self.stations = cityStations.map { station in
+                    return (
+                        title: station.title,
+                        code: station.code,
+                        stationType: station.stationType,
+                        transportType: station.transportType
+                    )
+                }
                 self.filterStations(with: self.searchText)
                 print("Получены станции для города \"\(self.selectedCity)\": \(cityStations.count)")
-            }
-            .store(in: &cancellables)
-        
-        $searchText
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .removeDuplicates()
-            .sink { [weak self] text in
-                self?.filterStations(with: text)
             }
             .store(in: &cancellables)
         
